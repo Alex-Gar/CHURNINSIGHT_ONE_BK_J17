@@ -100,3 +100,111 @@ Configuraciones locales
 
 
 🚀 Listo para comenzar
+
+![alt Diagrama E-R](image.png)
+
+
+
+<em> Retos del Equipo y Lineamientos de Desarrollo </em>
+
+Esta sección describe los principales retos técnicos y las reglas de trabajo colaborativo que deberán seguir todos los integrantes del equipo durante el desarrollo del proyecto ChurnInsight.
+
+🗄️ Modelado de Datos y Relaciones (JPA)
+
+Diseñar y crear correctamente las relaciones entre tablas utilizando anotaciones de JPA:
+
+@OneToMany
+
+@ManyToOne
+
+@ManyToMany
+
+Garantizar una correcta representación del modelo de dominio y la integridad de los datos en la base de datos.
+
+🗑️ Borrado Lógico (Soft Delete)
+
+Implementar un borrado lógico, evitando la eliminación física de registros en la base de datos.
+
+Se deberá utilizar el siguiente campo para marcar un registro como eliminado:
+
+deleted_at TIMESTAMP NULL
+
+
+Cuando un registro sea eliminado lógicamente:
+
+El campo deleted_at deberá almacenar la fecha y hora de la eliminación.
+
+Todas las consultas SELECT deberán:
+
+Retornar únicamente los registros donde deleted_at sea NULL.
+
+Excluir automáticamente los registros marcados como eliminados.
+
+El borrado lógico deberá integrarse con Spring Data Auditing para mantener trazabilidad e historial de cambios.
+
+🔐 Seguridad de la Aplicación
+
+Implementar Spring Security con JWT (JSON Web Tokens) para:
+
+Autenticación de usuarios
+
+Autorización de accesos
+
+Protección de endpoints según roles y permisos
+
+🌱 Flujo de Trabajo con Git Flow
+
+El proyecto utiliza Git Flow como estrategia oficial de control de versiones.
+
+Reglas obligatorias:
+
+❌ No se permite realizar commits directamente en la rama master.
+
+✅ Todo el desarrollo debe realizarse a partir de la rama develop.
+
+Flujo recomendado por funcionalidad:
+
+Crear una nueva rama feature para cada tarea:
+
+git flow feature start CRUD_Usuario
+
+
+Realizar todos los commits relacionados con la tarea únicamente en la rama feature.
+
+Una vez que la funcionalidad:
+
+Esté completamente implementada
+
+Funcione correctamente
+
+Haya sido validada
+
+Se deberá cerrar la feature:
+
+git flow feature finish CRUD_Usuario
+
+
+Este proceso:
+
+Cerrará la rama feature
+
+Fusionará automáticamente los cambios en la rama develop
+
+Subir los cambios al repositorio remoto:
+
+git push origin develop
+
+
+Esto permitirá que todo el equipo tenga acceso a los avances más recientes del proyecto.
+
+✅ Buenas Prácticas Esperadas
+
+Commits claros, pequeños y descriptivos
+
+Código funcional antes de cerrar una feature
+
+Uso correcto de Git Flow
+
+Respeto a las convenciones del proyecto
+
+Comunicación constante con el equipo
