@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.churninsight.one.Controllers.ResourceNotFoundException;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -17,17 +18,25 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> listar() {
-        return this.usuarioRepository.findAll();
+        List<Usuario> resultado = this.usuarioRepository.findAll();
+        if (resultado == null || resultado.isEmpty()) {
+            throw new ResourceNotFoundException("usuarios");
+        }
+        return resultado;
     }
 
     @Override
     public Usuario buscarPorId(String id) {
-        return this.usuarioRepository.findById(id).orElse(null);
+        Usuario resultado = this.usuarioRepository.findById(id).orElse(null);
+        if (resultado == null) {
+            throw new ResourceNotFoundException("usuario", "id", id);
+        }
+        return resultado;
     }
 
     @Override
     public Usuario editar(Usuario usuario) {
-        return this.usuarioRepository.save(usuario);
+      return this.usuarioRepository.save(usuario);
     }
 
     @Override

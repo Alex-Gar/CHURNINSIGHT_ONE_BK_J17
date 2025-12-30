@@ -47,8 +47,6 @@ public class GlobalHandlerException {
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
-    // Revisar metodo: expone la estructura de la BD al lanzarse los el manejador de
-    // excepciones
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse> handlerBadRequestException(BadRequestException ex) {
 
