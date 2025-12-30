@@ -1,33 +1,48 @@
 package com.churninsight.one.services.implementations;
 
+import java.util.List;
 
-import com.churninsight.one.models.entities.Usuario;
-import com.churninsight.one.models.peyload.ApiResponse;
-import com.churninsight.one.models.peyload.PrediccionRequestDTO;
-import com.churninsight.one.models.peyload.PrediccionResponseDTO;
-import com.churninsight.one.services.UsuarioServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.repositories.UsuarioRepository;
+import com.churninsight.one.services.UsuarioService;
+
 @Service
-public class UsuarioServiceImpl implements UsuarioServices {
+public class UsuarioServiceImpl implements UsuarioService {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
-    public ApiResponse predecirChurn(PrediccionRequestDTO request) {
-
-        //Simulación de respuesta de Python(por ahora)
-        PrediccionResponseDTO respuesta= new PrediccionResponseDTO();
-        respuesta.setAbandonoCliente(1);
-        respuesta.setProbabilidadAbandono(0.73);
-
-        //Mapear a entidad Usuario
-        Usuario usuario = new Usuario();
-        usuario.setIdCliente(request.getIdCliente());
-        usuario.setGenero(request.getGenero());
-        usuario.setAntiguedad_meses(request.getAntiguedadMeses());
-        usuario.setTipo_contrato(request.getTipoContrato());
-        usuario.setAbandono_cliente(respuesta.getAbandonoCliente());
-        usuario.setProbabilidadAbandono(respuesta.getProbabilidadAbandono());
-
-        return new ApiResponse("Predicción generada correctamente", respuesta);
+    public List<Usuario> listar() {
+        return this.usuarioRepository.findAll();
     }
+
+    @Override
+    public Usuario buscarPorId(String id) {
+        return this.usuarioRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Usuario editar(Usuario usuario) {
+        return this.usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public void eliminar(String id) {
+        Usuario existeUsuario = this.buscarPorId(id);
+        if (existeUsuario == null) {
+            throw new ResourceNotFoundException("Usuario", "id", id);
+        } else {
+            this.usuarioRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public Boolean existeId(String id) {
+        return this.usuarioRepository.existsById(id);
+    }
+
 }
