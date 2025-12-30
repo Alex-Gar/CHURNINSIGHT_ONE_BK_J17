@@ -3,9 +3,11 @@ package com.churninsight.one.services.implementations;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.churninsight.one.Controllers.ResourceNotFoundException;
+import com.churninsight.one.exceptions.BadRequestException;
+import com.churninsight.one.exceptions.ResourceNotFoundException;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -36,7 +38,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario editar(Usuario usuario) {
-      return this.usuarioRepository.save(usuario);
+        try {
+            if (this.existeId(usuario.getId()) && usuario.getId().equals(usuario.getId())) {
+                return this.usuarioRepository.save(usuario);
+
+            } else {
+                throw new ResourceNotFoundException("usuario", "id", usuario.getId());
+            }
+        } catch (DataAccessException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
     }
 
     @Override

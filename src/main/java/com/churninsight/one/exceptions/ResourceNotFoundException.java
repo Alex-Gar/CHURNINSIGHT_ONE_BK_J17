@@ -1,4 +1,4 @@
-package com.churninsight.one.Controllers;
+package com.churninsight.one.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

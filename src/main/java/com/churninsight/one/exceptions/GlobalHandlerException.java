@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.churninsight.one.Controllers.ResourceNotFoundException;
 import com.churninsight.one.models.peyload.ApiResponse;
 
 @RestControllerAdvice
