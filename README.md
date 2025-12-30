@@ -102,7 +102,7 @@ Configuraciones locales
 🚀 Listo para comenzar
 
 ![alt Diagrama E-R](image.png)
-
+https://www.drawdb.app/editor?shareId=6ab7271f8bd0d619798764569edf7f5e
 
 
 <em> Retos del Equipo y Lineamientos de Desarrollo </em>
