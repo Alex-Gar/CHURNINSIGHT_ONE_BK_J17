@@ -1,19 +1,26 @@
 package com.churninsight.one.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.peyload.ApiResponse;
 
 public interface UsuarioService {
 
-    public List<Usuario> listar();
+    public Page<Usuario> listar(Integer pagina, Integer tamanio);
 
-    public Usuario buscarPorId(String id);
+    public ApiResponse buscarPorId(String id);
 
-    public Usuario editar(Usuario usuario);
-
-    public void eliminar(String id);
+    public ApiResponse editar(Usuario usuario);
 
     public Boolean existeId(String id);
+
+    public Page<Usuario> listarUsuariosActivos(Integer pagina, Integer tamanio);
+
+    public Page<Usuario> listarUsuariosEliminados(Integer pagina, Integer tamanio);
+
+    public ApiResponse buscarUsuarioActivoPorId(String id);
+
+    public ApiResponse borradoLogico(String id);
 
 }
