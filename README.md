@@ -1,4 +1,127 @@
-ChurnInsight – Guía de Configuración Inicial
+# ChurnInsight – Propuesta POC MVP
+
+**Propuesta de modelo funcional para el proyecto ChurnInsight**
+
+Propuesta enfocada en la colaboración para el sistema ChurnInsight, basada en un desarrollo incremental mediante ajustes, cambios y variantes, promoviendo una forma de trabajo iterativa orientada al bien común del proyecto.
+ 
+- Los avances se documentan de forma progresiva, permitiendo consultar cada ajuste realizado, junto con su respectiva justificación técnica.
+
+
+## 📋 Índice
+
+**Implementaciones**
+-  [📦 README Original "Compañero Alex" ](#churninsight--guía-de-configuración-inicial)
+-  [📦 Ajustes de estructura del proyecto ](#-ajustes-de-estructura-del-proyecto)
+-  [📈 Implementacion "LOMBOK" y ajuste "POM""](#-implementación-de-lombok-y-ajustes-en-pom)
+-  [📁 Ajustes de configuración (YAML y perfiles)](#-ajustes-de-configuración-yaml-y-perfiles)
+
+---
+
+# 📁 Ajustes de configuración (YAML y perfiles)
+
+
+**Se realizaron ajustes en la configuración del proyecto para separar los entornos de ejecución y facilitar el desarrollo del MVP, sin modificar la lógica de negocio ni el comportamiento funcional del sistema.**
+
+### Cambios realizados
+
+- Separación de la configuración en múltiples archivos YAML según el entorno.
+- Definición de un archivo application.yml base con configuración común.
+- Activación del perfil h2 como entorno por defecto para el MVP.
+- Creación de un archivo application-h2.yml para configuración de base de datos en memoria.
+- Habilitación de la consola H2 para facilitar pruebas y validación de datos.
+- Separación de la configuración de PostgreSQL en un archivo independiente.
+- Mantenimiento de la configuración original de PostgreSQL para futuras etapas del proyecto.
+- Centralización del nivel de logging en la configuración base.
+
+### 🎯 Objetivo del ajuste
+
+Permitir un cambio controlado entre entornos de desarrollo y persistencia sin modificar código, reducir fricción durante el desarrollo inicial y preparar el proyecto para una configuración más robusta en etapas posteriores.
+
+### 🧱 Impacto técnico
+
+Estos ajustes no agregan nuevas funcionalidades ni afectan al usuario final.
+Su finalidad es mejorar la organización de la configuración, facilitar pruebas locales y evitar dependencias innecesarias durante el desarrollo del MVP.
+
+## [📋 Volver al índice ☝️](#-índice)
+
+
+---
+
+# 📈 Implementación de Lombok y ajustes en POM
+
+**Se realizaron ajustes en el archivo pom.xml con el objetivo de ordenar las dependencias, simplificar el entorno de desarrollo del MVP y mejorar la calidad y legibilidad del código, sin alterar el comportamiento funcional del sistema.**
+
+### Cambios realizados
+
+- Reorganización del archivo pom.xml por bloques funcionales para mejorar su lectura y mantenimiento.
+- Incorporación de Lombok para reducir código repetitivo en entidades, DTOs y servicios.
+- Configuración del procesador de anotaciones para Lombok y exclusión de la librería del artefacto final.
+- Integración de H2 como base de datos en memoria para la etapa de MVP.
+- Habilitación de consola H2 para facilitar pruebas y validación de datos.
+- Suspensión temporal de PostgreSQL, manteniéndolo comentado para futuras etapas.
+- Eliminación de metadata vacía y secciones sin uso del POM original.
+- Mantenimiento de herramientas de desarrollo y testing necesarias para el flujo actual.
+
+### 🎯 Objetivo del ajuste
+
+Simplificar el entorno técnico del proyecto en la etapa inicial, reducir fricción durante el desarrollo y establecer una configuración clara y mantenible para el crecimiento posterior del sistema.
+
+### 🧱 Impacto técnico
+
+Estos ajustes no agregan nuevas funcionalidades ni modifican la lógica de negocio.
+Su propósito es mejorar la legibilidad del código, reducir ruido estructural y evitar complejidad innecesaria durante el desarrollo del MVP.
+
+## [📋 Volver al índice ☝️](#-índice)
+
+---
+# 📦 Ajustes de estructura del proyecto
+
+**Se realizaron ajustes menores en la estructura de carpetas con el objetivo de ordenar el proyecto y alinearlo con una separación básica de responsabilidades, sin alterar la lógica funcional del sistema.**
+
+Estos cambios buscan facilitar el mantenimiento del código y preparar la base para los siguientes pasos del desarrollo.
+
+**Cambios realizados:**
+
+- Se movió la carpeta repository al nivel raíz del proyecto, junto a controller y la clase principal.
+- Se eliminó la carpeta entities dentro de models.
+- Se reorganizó el dominio por entidad funcional, creando un paquete por entidad.
+- Cada entidad contiene su clase JPA y un subpaquete dto para objetos de transferencia de datos.
+- Se simplificó la estructura de service, eliminando la carpeta implementations.
+- Se mantuvieron los servicios con nombres autodescriptivos por entidad.
+- Se centralizó la lógica auxiliar en una carpeta utils/helper.
+- Se separó el manejo de excepciones como una preocupación transversal del sistema.
+
+**Objetivo del ajuste:**
+
+Establecer una estructura clara y coherente que evite mezclar responsabilidades, reduzca ruido innecesario y permita que el proyecto mantenga un nivel técnico consistente conforme avance el desarrollo.
+
+**🍱 Beneficio:**
+
+- Mejor legibilidad
+- Menor acoplamiento
+- Base más clara para futuros cambios
+
+**🧱 Impacto técnico**
+
+Estos ajustes no agregan nuevas funcionalidades ni representan mejoras visibles para el usuario final. Su propósito es evitar desorden estructural, facilitar la lectura del código y prevenir deuda técnica temprana.
+
+## [📋 Volver al índice ☝️](#-índice)
+
+---
+
+# Contribucion 
+## 👨‍💻 Desarrollador
+
+**Jesús Medina Casas**
+- 💻 Apasionado por desarrollo backend con Java y Spring Boot
+- 🎓 Estudiante de Oracle Next Education (ONE)
+
+
+- 🌐 [LinkedIn](https://www.linkedin.com/in/jesus-medina-casas/)   🧑‍💻 [GitHub](https://github.com/chuycode15)
+
+---
+
+# ChurnInsight – Guía de Configuración Inicial
 
 Este documento describe los pasos necesarios para configurar correctamente el proyecto ChurnInsight en un entorno de desarrollo local y las reglas básicas de trabajo en equipo.
 
@@ -208,3 +331,5 @@ Uso correcto de Git Flow
 Respeto a las convenciones del proyecto
 
 Comunicación constante con el equipo
+
+## [📋 Volver al índice ☝️](#-índice)

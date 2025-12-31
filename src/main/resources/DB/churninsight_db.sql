@@ -210,6 +210,7 @@ CREATE TABLE
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         deleted_at TIMESTAMP NULL,
         FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+
         FOREIGN KEY (rol_id) REFERENCES roles (id)
     );
 
