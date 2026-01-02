@@ -3,6 +3,7 @@ package com.churninsight.one.services;
 import org.springframework.data.domain.Page;
 
 import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.entities.usuario.UsuarioDto;
 import com.churninsight.one.models.peyload.ApiResponse;
 
 public interface UsuarioService {
@@ -11,7 +12,9 @@ public interface UsuarioService {
 
     public ApiResponse buscarPorId(String id);
 
-    public ApiResponse editar(Usuario usuario);
+    public ApiResponse crear(UsuarioDto usuarioDto);
+
+    public ApiResponse editar(UsuarioDto usuarioDto);
 
     public Boolean existeId(String id);
 

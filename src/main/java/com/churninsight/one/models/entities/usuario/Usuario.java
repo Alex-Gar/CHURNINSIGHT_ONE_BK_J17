@@ -6,14 +6,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.churninsight.one.utils.GeneradorId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-
 
 @Entity
 @Table(name = "usuarios")
@@ -21,9 +21,11 @@ import jakarta.persistence.Table;
 public class Usuario {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", length = 10)
     private String id;
+
+    @Column(name = "nombre")
+    private String nombre;
 
     @Column(name = "p_apellido")
     private String pApellido;
@@ -69,8 +71,30 @@ public class Usuario {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        this.id = GeneradorId.generarId();
+        this.createdAt = LocalDateTime.now();
+        this.isEnabled = true;
+        this.accountNoExpired = true;
+        this.accountNoLocked = true;
+        this.credentialNoExpired = true;
+    }
+
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getpApellido() {

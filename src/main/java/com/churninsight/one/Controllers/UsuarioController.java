@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.entities.usuario.UsuarioDto;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.services.UsuarioService;
 
@@ -43,6 +44,7 @@ public class UsuarioController {
     // ApiResponse resultado = this.usuarioService.buscarPorId(id);
     // return new ResponseEntity<>(resultado, HttpStatus.OK);
     // }
+    
 
     @GetMapping
     public ResponseEntity<ApiResponse> listarUsuariosActivos(@RequestParam(defaultValue = "0") Integer pagina,
@@ -65,15 +67,15 @@ public class UsuarioController {
         return new ResponseEntity<>(resultado, HttpStatus.OK);
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<ApiResponse> crearUsuario(@Valid @RequestBody Usuario usuario) {
-        ApiResponse nuevoUsuario = this.usuarioService.editar(usuario);
+    @PostMapping()
+    public ResponseEntity<ApiResponse> crearUsuario(@Valid @RequestBody UsuarioDto usuarioDto) {
+        ApiResponse nuevoUsuario = this.usuarioService.crear(usuarioDto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> editarUsuarios(@Valid @PathVariable String id, @RequestBody Usuario usuario) {
-        ApiResponse usuarioEditado = this.usuarioService.editar(usuario);
+    public ResponseEntity<ApiResponse> editarUsuarios(@Valid @PathVariable String id, @RequestBody UsuarioDto usuarioDto) {
+        ApiResponse usuarioEditado = this.usuarioService.editar(usuarioDto);
         return new ResponseEntity<>(usuarioEditado, HttpStatus.OK);
     }
 

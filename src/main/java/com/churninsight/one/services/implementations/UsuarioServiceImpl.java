@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.exceptions.ResourceNotFoundException;
 import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.entities.usuario.UsuarioDto;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -45,15 +46,52 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Transactional
     @Override
-    public ApiResponse editar(Usuario usuario) {
+    public ApiResponse crear(UsuarioDto usuarioDto) {
         try {
-            if (this.existeId(usuario.getId()) && usuario.getId().equals(usuario.getId())) {
-                Usuario resultado = this.usuarioRepository.save(usuario);
-                ApiResponse response = new ApiResponse("Usuario editado con éxito", true, resultado);
-                return response;
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre(usuarioDto.nombre());
+            nuevoUsuario.setpApellido(usuarioDto.pApellido());
+            nuevoUsuario.setsApellido(usuarioDto.sApellido());
+            nuevoUsuario.setEmail(usuarioDto.email());
+            nuevoUsuario.setPassword(usuarioDto.password());
+            nuevoUsuario.setTelefono(usuarioDto.telefono());
+            nuevoUsuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
+            nuevoUsuario.setGenero(usuarioDto.genero());
+
+            Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
+            System.out.println("ID: " + nuevoUsuario.getId());
+            ApiResponse response = new ApiResponse("Usuario creado con éxito", true, resultado);
+            return response;
+        } catch (DataAccessException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse editar(UsuarioDto usuarioDto) {
+        try {
+            if (this.existeId(usuarioDto.id()) && usuarioDto.id().equals(usuarioDto.id())) {
+                Usuario usuario = this.usuarioRepository.findById(usuarioDto.id()).orElse(null);
+                if (usuario != null) {
+                    usuario.setpApellido(usuarioDto.pApellido());
+                    usuario.setsApellido(usuarioDto.sApellido());
+                    usuario.setEmail(usuarioDto.email());
+                    usuario.setPassword(usuarioDto.password());
+                    usuario.setTelefono(usuarioDto.telefono());
+                    usuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
+                    usuario.setGenero(usuarioDto.genero());
+
+                    Usuario resultado = this.usuarioRepository.save(usuario);
+                    ApiResponse response = new ApiResponse("Usuario editado con éxito", true, resultado);
+                    return response;
+                } else {
+                    throw new ResourceNotFoundException("usuario", "id", usuarioDto.id());
+                }
             } else {
-                throw new ResourceNotFoundException("usuario", "id", usuario.getId());
+                throw new ResourceNotFoundException("usuario", "id", usuarioDto.id());
             }
+
         } catch (DataAccessException ex) {
             throw new BadRequestException(ex.getMessage());
         }
@@ -87,6 +125,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         return resultado;
     }
+
     @Override
     public Page<Usuario> listarUsuariosEliminados(Integer pagina, Integer tamanio) {
         Pageable pageable = PageRequest.of(pagina, tamanio);
