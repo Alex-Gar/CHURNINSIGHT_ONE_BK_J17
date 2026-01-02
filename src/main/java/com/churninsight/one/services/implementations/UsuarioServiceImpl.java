@@ -50,8 +50,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         try {
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setNombre(usuarioDto.nombre());
-            nuevoUsuario.setpApellido(usuarioDto.pApellido());
-            nuevoUsuario.setsApellido(usuarioDto.sApellido());
+            nuevoUsuario.setPApellido(usuarioDto.pApellido());
+            nuevoUsuario.setSApellido(usuarioDto.sApellido());
             nuevoUsuario.setEmail(usuarioDto.email());
             nuevoUsuario.setPassword(usuarioDto.password());
             nuevoUsuario.setTelefono(usuarioDto.telefono());
@@ -74,8 +74,9 @@ public class UsuarioServiceImpl implements UsuarioService {
             if (this.existeId(usuarioDto.id()) && usuarioDto.id().equals(usuarioDto.id())) {
                 Usuario usuario = this.usuarioRepository.findById(usuarioDto.id()).orElse(null);
                 if (usuario != null) {
-                    usuario.setpApellido(usuarioDto.pApellido());
-                    usuario.setsApellido(usuarioDto.sApellido());
+                    usuario.setNombre(usuarioDto.nombre());
+                    usuario.setPApellido(usuarioDto.pApellido());
+                    usuario.setSApellido(usuarioDto.sApellido());
                     usuario.setEmail(usuarioDto.email());
                     usuario.setPassword(usuarioDto.password());
                     usuario.setTelefono(usuarioDto.telefono());

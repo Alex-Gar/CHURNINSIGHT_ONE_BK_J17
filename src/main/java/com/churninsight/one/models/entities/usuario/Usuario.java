@@ -97,19 +97,19 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getpApellido() {
+    public String getPApellido() {
         return pApellido;
     }
 
-    public void setpApellido(String pApellido) {
+    public void setPApellido(String pApellido) {
         this.pApellido = pApellido;
     }
 
-    public String getsApellido() {
+    public String getSApellido() {
         return sApellido;
     }
 
-    public void setsApellido(String sApellido) {
+    public void setSApellido(String sApellido) {
         this.sApellido = sApellido;
     }
 
