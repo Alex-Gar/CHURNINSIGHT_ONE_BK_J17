@@ -59,4 +59,24 @@ public class RolController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{rolId}/permisos/{permisoId}")
+    public ResponseEntity<Rol> asignarPermiso(@PathVariable Long rolId, @PathVariable Long permisoId) {
+        try {
+            Rol rol = rolService.asignarPermiso(rolId, permisoId);
+            return ResponseEntity.ok(rol);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{rolId}/permisos/{permisoId}")
+    public ResponseEntity<Rol> removerPermiso(@PathVariable Long rolId, @PathVariable Long permisoId) {
+        try {
+            Rol rol = rolService.removerPermiso(rolId, permisoId);
+            return ResponseEntity.ok(rol);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

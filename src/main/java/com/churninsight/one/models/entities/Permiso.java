@@ -1,5 +1,6 @@
 package com.churninsight.one.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -8,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "permisos")
@@ -24,6 +27,10 @@ public class Permiso {
     private String nombre;
 
     private String descripcion;
+
+    @ManyToMany(mappedBy = "permisos")
+    @JsonIgnoreProperties("permisos")
+    private List<Rol> roles = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -86,6 +93,14 @@ public class Permiso {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
     public LocalDateTime getDeletedAt() {
