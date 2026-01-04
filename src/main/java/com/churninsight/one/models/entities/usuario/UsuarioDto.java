@@ -30,6 +30,8 @@ public record UsuarioDto(
         LocalDateTime fechaNacimiento,
         @NotBlank(message = "El género es obligatorio") @Pattern(regexp = "MASCULINO|FEMENINO|OTRO", message = "El género debe ser MASCULINO, FEMENINO u OTRO") 
         String genero,
+        Boolean tieneConyuge,
+        Boolean tieneDependientes,
         Boolean isEnabled,
         Boolean accountNoExpired,
         Boolean accountNoLocked,

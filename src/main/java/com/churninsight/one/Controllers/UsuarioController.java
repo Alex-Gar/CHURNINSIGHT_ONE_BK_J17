@@ -33,12 +33,11 @@ public class UsuarioController {
     // = "0") Integer pagina,
     // @RequestParam(defaultValue = "10") Integer tamanio) {
     // Page<Usuario> data = this.usuarioService.listar(pagina, tamanio);
-    // ApiResponse response = new ApiResponse(data.get(), "Lista de usuarios
-    // obtenida con éxito", true);
+    // ApiResponse response = new ApiResponse(data.get(), "Lista de usuariosobtenida con éxito", true);
     // return new ResponseEntity<>(response, HttpStatus.OK);
     // }
 
-    // @GetMapping("{id}")
+    // @GetMapping("{id}")Z
     // public ResponseEntity<ApiResponse> buscarUsuarioPorId(@PathVariable String
     // id) {
     // ApiResponse resultado = this.usuarioService.buscarPorId(id);

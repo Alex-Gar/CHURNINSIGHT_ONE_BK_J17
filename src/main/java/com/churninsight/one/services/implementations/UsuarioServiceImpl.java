@@ -57,6 +57,8 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoUsuario.setTelefono(usuarioDto.telefono());
             nuevoUsuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
             nuevoUsuario.setGenero(usuarioDto.genero());
+            nuevoUsuario.setTieneConyuge(usuarioDto.tieneConyuge());
+            nuevoUsuario.setTieneDependientes(usuarioDto.tieneDependientes());
 
             Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
             System.out.println("ID: " + nuevoUsuario.getId());
@@ -101,7 +103,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public ApiResponse borradoLogico(String id) {
-        ApiResponse existeUsuario = this.buscarPorId(id);
+        ApiResponse existeUsuario = this.buscarUsuarioActivoPorId(id);
         if (existeUsuario.getData() == null) {
             throw new ResourceNotFoundException("Usuario", "id", id);
         } else {
@@ -126,6 +128,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         return resultado;
     }
+
 
     @Override
     public Page<Usuario> listarUsuariosEliminados(Integer pagina, Integer tamanio) {
