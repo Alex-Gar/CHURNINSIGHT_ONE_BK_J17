@@ -10,7 +10,7 @@ public record DatosDetalleChurnCliente(
         Integer antiguedadMeses,
         String tipoContrato,
         BigDecimal cargoMensual,
-        Double probabilidadChurn,
+        Double probabilidad,
         Boolean churn
 
 ) {

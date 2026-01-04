@@ -15,15 +15,13 @@ public class PredictService {
     @Autowired
     private DsPredictClient dsPredictClient;
 
-
-
     public DatosDetalleChurnCliente predecirCliente(@Valid DatosConsultaChurnCliente datos) {
 
         Cliente cliente = new Cliente(datos);
         var datosDS = dsPredictClient.obtenerPrediccion(new DatosObtenerPrediccionCliente(cliente));
         cliente.setChurn(datosDS.churn());
+        cliente.setPrevision(datosDS.prevision());
         cliente.setProbabilidad(datosDS.probabilidad());
         return new DatosDetalleChurnCliente(cliente);
-
     }
 }

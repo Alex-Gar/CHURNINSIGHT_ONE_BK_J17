@@ -5,10 +5,16 @@ spring:
   profiles:
     active: h2
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.orm.jdbc.bind: TRACE
+
+
 
 server:
-  port: 8081
+    port: 8060
+    error:
+        include-stacktrace: never
+
+

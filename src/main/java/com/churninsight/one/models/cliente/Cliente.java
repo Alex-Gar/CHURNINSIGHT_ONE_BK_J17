@@ -6,7 +6,6 @@ import com.churninsight.one.enums.ServicioInternet;
 import com.churninsight.one.enums.TipoContrato;
 import com.churninsight.one.models.cliente.dto.DatosConsultaChurnCliente;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -89,6 +88,8 @@ public class Cliente {
 
     @Column(name = "cargos_totales", nullable = false)
     private BigDecimal cargosTotales;
+
+    private String prevision;
 
     private Double probabilidad;
 

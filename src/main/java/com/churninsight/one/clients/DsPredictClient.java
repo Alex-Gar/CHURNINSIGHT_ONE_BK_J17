@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-
 @Component
 public class DsPredictClient {
 
@@ -15,11 +14,12 @@ public class DsPredictClient {
 
     public DsPredictClient(){
         this.restClient = RestClient.builder()
-                .baseUrl("url")
+                .baseUrl("http://localhost:8081/api/churn")
                 .build();
     }
 
-    public DatosDsPredict obtenerPrediccion(DatosObtenerPrediccionCliente datos){
+    public DatosDsPredict obtenerPrediccion(DatosObtenerPrediccionCliente datos){;
+
         return restClient.post()
                 .uri("/predict")
                 .contentType(MediaType.APPLICATION_JSON)
