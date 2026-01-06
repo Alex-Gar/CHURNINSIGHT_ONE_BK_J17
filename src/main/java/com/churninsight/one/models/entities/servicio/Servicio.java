@@ -1,46 +1,53 @@
 package com.churninsight.one.models.entities.servicio;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name= "servicios")
+@Table(name = "servicios")
 @EntityListeners(AuditingEntityListener.class)
 public class Servicio {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name= "id_plan")
-    private Integer idPlan;
-
-    @Column(name= "ultima_fecha_pago")
-    private LocalDate ultimaFechaPago;
-
-    @Column(name = "facturacion")
-    private Boolean facturacion;
-
-    @Column(name = "tipo_contrato")
-    private long tipoContrato;
-
-    @Column(name= "id_usuario")
+    @Column(name = "id_usuario")
     private String idUsuario;
 
-    @Column(name= "subscription")
-    private Boolean subscription;
+    @Column(name = "id_plan")
+    private Integer idPlan;
+
+    @Column(name = "ultima_fecha_pago")
+    private LocalDate ultimaFechaPago;
+
+    @Column(name = "facturacion_electronica")
+    private Boolean facturacionElectronica;
+
+    @Column(name = "tipo_contrato")
+    private String tipoContrato;
+
+    @Column(name = "subscripcion_activa")
+    private Boolean subscripcionActiva;
 
     @CreatedDate
-    @Column(name= "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name= "updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
@@ -52,6 +59,14 @@ public class Servicio {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Integer getIdPlan() {
@@ -70,36 +85,28 @@ public class Servicio {
         this.ultimaFechaPago = ultimaFechaPago;
     }
 
-    public Boolean getFacturacion() {
-        return facturacion;
+    public Boolean getFacturacionElectronica() {
+        return facturacionElectronica;
     }
 
-    public void setFacturacion(Boolean facturacion) {
-        this.facturacion = facturacion;
+    public void setFacturacionElectronica(Boolean facturacionElectronica) {
+        this.facturacionElectronica = facturacionElectronica;
     }
 
-    public long getTipoContrato() {
+    public String getTipoContrato() {
         return tipoContrato;
     }
 
-    public void setTipoContrato(long tipoContrato) {
+    public void setTipoContrato(String tipoContrato) {
         this.tipoContrato = tipoContrato;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
+    public Boolean getSubscripcionActiva() {
+        return subscripcionActiva;
     }
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public Boolean getSubscription() {
-        return subscription;
-    }
-
-    public void setSubscription(Boolean subscription) {
-        this.subscription = subscription;
+    public void setSubscripcionActiva(Boolean subscripcionActiva) {
+        this.subscripcionActiva = subscripcionActiva;
     }
 
     public LocalDateTime getCreatedAt() {

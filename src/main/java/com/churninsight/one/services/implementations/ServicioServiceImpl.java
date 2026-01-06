@@ -1,13 +1,5 @@
 package com.churninsight.one.services.implementations;
 
-import com.churninsight.one.exceptions.BadRequestException;
-import com.churninsight.one.exceptions.ResourceNotFoundException;
-import com.churninsight.one.models.entities.servicio.Servicio;
-import com.churninsight.one.models.entities.servicio.ServicioDto;
-import com.churninsight.one.models.peyload.ApiResponse;
-import com.churninsight.one.models.repositories.ServicioRepository;
-import com.churninsight.one.services.ServicioService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -15,6 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.churninsight.one.exceptions.BadRequestException;
+import com.churninsight.one.exceptions.ResourceNotFoundException;
+import com.churninsight.one.models.entities.servicio.Servicio;
+import com.churninsight.one.models.entities.servicio.ServicioDto;
+import com.churninsight.one.models.peyload.ApiResponse;
+import com.churninsight.one.models.repositories.ServicioRepository;
+import com.churninsight.one.services.ServicioService;
 
 @Service
 public class ServicioServiceImpl implements ServicioService {
@@ -69,10 +69,10 @@ public class ServicioServiceImpl implements ServicioService {
             Servicio nuevoServicio = new Servicio();
             nuevoServicio.setIdPlan(servicioDto.idPlan());
             nuevoServicio.setUltimaFechaPago(servicioDto.ultimaFechaPago());
-            nuevoServicio.setFacturacion(servicioDto.facturacion());
+            nuevoServicio.setFacturacionElectronica(servicioDto.facturacionElectronica());
             nuevoServicio.setTipoContrato(servicioDto.tipoContrato());
             nuevoServicio.setIdUsuario(servicioDto.idUsuario());
-            nuevoServicio.setSubscription(servicioDto.subscription());
+            nuevoServicio.setSubscripcionActiva(servicioDto.subscripcionActiva());
 
             Servicio resultado = this.servicioRepository.save(nuevoServicio);
 
@@ -96,10 +96,10 @@ public class ServicioServiceImpl implements ServicioService {
 
             servicio.setIdPlan(servicioDto.idPlan());
             servicio.setUltimaFechaPago(servicioDto.ultimaFechaPago());
-            servicio.setFacturacion(servicioDto.facturacion());
+            servicio.setFacturacionElectronica(servicioDto.facturacionElectronica());
             servicio.setTipoContrato(servicioDto.tipoContrato());
             servicio.setIdUsuario(servicioDto.idUsuario());
-            servicio.setSubscription(servicioDto.subscription());
+            servicio.setSubscripcionActiva(servicioDto.subscripcionActiva());
 
             Servicio resultado = this.servicioRepository.save(servicio);
 
