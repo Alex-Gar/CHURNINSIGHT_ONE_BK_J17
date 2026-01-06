@@ -101,9 +101,8 @@ Configuraciones locales
 
 🚀 Listo para comenzar
 
-![alt Diagrama E-R](image.png)
-https://www.drawdb.app/editor?shareId=6ab7271f8bd0d619798764569edf7f5e
-
+![alt text](DB.png)
+Proyecto que se Busca alcanzar dividido en etapas
 
 <em> Retos del Equipo y Lineamientos de Desarrollo </em>
 
@@ -208,3 +207,49 @@ Uso correcto de Git Flow
 Respeto a las convenciones del proyecto
 
 Comunicación constante con el equipo
+
+![alt text](DB.png)
+
+
+**Tablas verdes importantes para el funcionamiento del sistema
+-usuaio
+--Apis obligatorias a desarrollar
+---CREAR USUARIO
+---lISTAR USUARIOS ACTIVOS usando PAGE(paginador)
+---BUSCAR POR ID ACTIVOS
+---ACTUALIZAR USARIOS ACTIVOS
+---ELIMINAR USUARIOS ACTIVOS
+---LISTAR USUARIOS ELIMINADOS 
+
+-Predicion
+--Apis obligatorias a desarrollar
+--- LISTAR PREDICIONES 
+--- BUSACAR PREDICION POR ID
+--- ACTUALIZAR PREDICION POR ID (Esta tabla debera actualizar su información cuando se reciba una nueva predicion del usuario)
+
+-wv_input
+---LISTAR VW_INPUT 
+---BUSCAR POR ID (ID_CLIENTE)
+
+**Tablas naranga no importantes solo para la imprementación de Spring Security para el funcionamiento del sistema
+--Permisos
+---CRUD COMPRETO
+--Roles permisos
+------CRUD COMPRETO
+
+Se deben usar relaciones JPA @MANYTOMANY O @MANYTOONE
+Con el objetivo de que cuando se liste la tabla permisos traiga tambien las relaciones con roles, cuando se listen roles traiga tambien los permisos registrados a cada rol
+
+**Tablas rojas necesarias para que el sistema funciones no necesesarias para programar (en caso de dar tiempo si las programaremos) con registros en la base de datos fucncion y muestra la información que contiene desde la vista
+
+--Ofertas
+---CRUD
+--plannes
+---CRUD
+--servicios
+---CRUD
+
+
+***Pueden ver como esta cosntruida la rama feature/Usuario_Single_Responsibility para guiarse y usar las estructura de carpetas correctamente uso y imprementación de DTO´S generador de ID tipo cadena manejador de excepciones y borrado logico lo pueden hacer con anotaciones en la entidad o funciones JPQL en el repositorio
+--El codigo no es necesario que sea el mismo que feature/Usuario_Single_Responsibility  solo se busca que cumpra el objetivo cada uno programa a su modo  es valido y asi se integrara el codigo 
+es importante hacer uso correcto de la arquitectura(carpetas clases e interfaces asi como manejador de excepciones y respuestas)
