@@ -2,6 +2,7 @@ package com.churninsight.one.clients;
 
 import com.churninsight.one.models.cliente.dto.DatosDsPredict;
 import com.churninsight.one.models.cliente.dto.DatosObtenerPrediccionCliente;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,12 @@ public class DsPredictClient {
 
     private final RestClient restClient;
 
-    public DsPredictClient(){
+    public DsPredictClient(@Value("${mock.service.url}") String urlServer){
+        if (urlServer == null || urlServer.isEmpty()) {
+            throw new IllegalStateException("mock.service.url no está definida!");
+        }
         this.restClient = RestClient.builder()
-                .baseUrl("http://localhost:8081/api/churn")
+                .baseUrl(urlServer)
                 .build();
     }
 

@@ -10,10 +10,13 @@ spring:
       org.hibernate.SQL: DEBUG
       org.hibernate.orm.jdbc.bind: TRACE
 
+mock:
+  service:
+    url: ${MOCK_SERVICE_URL}
 
 
 server:
-    port: 8060
+    port: 8084
     error:
         include-stacktrace: never
 
