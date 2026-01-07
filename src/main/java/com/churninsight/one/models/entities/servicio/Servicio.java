@@ -23,7 +23,7 @@ public class Servicio {
     @Column(name= "ultima_fecha_pago")
     private LocalDate ultimaFechaPago;
 
-    @Column(name = "facturacion")
+    @Column(name = "facturacion_electronica")
     private Boolean facturacion;
 
     @Column(name = "tipo_contrato")
@@ -32,7 +32,7 @@ public class Servicio {
     @Column(name= "id_usuario")
     private String idUsuario;
 
-    @Column(name= "subscription")
+    @Column(name= "subscripcion_activa")
     private Boolean subscription;
 
     @CreatedDate
