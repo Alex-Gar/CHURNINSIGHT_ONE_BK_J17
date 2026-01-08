@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.churninsight.one.models.entities.vwInput.ServicioUsuarioView;
+import com.churninsight.one.models.entities.vwserviciosusuario.ServicioUsuarioView;
 import com.churninsight.one.models.repositories.ServicioUsuarioViewRepository;
 import com.churninsight.one.services.ServicioUsuarioViewService;
 

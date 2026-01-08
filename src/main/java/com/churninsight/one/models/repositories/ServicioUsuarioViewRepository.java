@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.churninsight.one.models.entities.vwInput.ServicioUsuarioView;
+import com.churninsight.one.models.entities.vwserviciosusuario.ServicioUsuarioView;
 
 public interface ServicioUsuarioViewRepository extends JpaRepository<ServicioUsuarioView, String> {
 
