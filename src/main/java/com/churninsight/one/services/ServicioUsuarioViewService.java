@@ -1,11 +1,12 @@
 package com.churninsight.one.services;
 
-import com.churninsight.one.models.entities.servicio.ServicioUsuarioView;
 import org.springframework.data.domain.Page;
+
+import com.churninsight.one.models.entities.vwInput.ServicioUsuarioView;
 
 public interface ServicioUsuarioViewService {
 
     Page<ServicioUsuarioView> listar(Integer pagina, Integer tamanio);
 
-    ServicioUsuarioView buscarPorId(Long id);
+    ServicioUsuarioView buscarPorId(String id);
 }

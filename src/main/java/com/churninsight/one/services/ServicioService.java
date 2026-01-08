@@ -1,9 +1,10 @@
 package com.churninsight.one.services;
 
+import org.springframework.data.domain.Page;
+
 import com.churninsight.one.models.entities.servicio.Servicio;
 import com.churninsight.one.models.entities.servicio.ServicioDto;
 import com.churninsight.one.models.peyload.ApiResponse;
-import org.springframework.data.domain.Page;
 
 public interface ServicioService {
 

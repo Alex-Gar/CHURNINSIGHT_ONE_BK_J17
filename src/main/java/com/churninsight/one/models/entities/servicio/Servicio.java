@@ -1,46 +1,53 @@
 package com.churninsight.one.models.entities.servicio;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name= "servicios")
+@Table(name = "servicios")
 @EntityListeners(AuditingEntityListener.class)
 public class Servicio {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name= "id_plan")
+    @Column(name = "id_plan")
     private Integer idPlan;
 
-    @Column(name= "ultima_fecha_pago")
+    @Column(name = "ultima_fecha_pago")
     private LocalDate ultimaFechaPago;
 
     @Column(name = "facturacion_electronica")
-    private Boolean facturacion;
+    private Boolean facturacionElectronica;
 
     @Column(name = "tipo_contrato")
-    private long tipoContrato;
+    private String tipoContrato;
 
-    @Column(name= "id_usuario")
+    @Column(name = "id_usuario")
     private String idUsuario;
 
-    @Column(name= "subscripcion_activa")
+    @Column(name = "subscripcion_activa")
     private Boolean subscription;
 
     @CreatedDate
-    @Column(name= "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name= "updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
@@ -70,19 +77,19 @@ public class Servicio {
         this.ultimaFechaPago = ultimaFechaPago;
     }
 
-    public Boolean getFacturacion() {
-        return facturacion;
+    public Boolean getFacturacionElectronica() {
+        return facturacionElectronica;
     }
 
-    public void setFacturacion(Boolean facturacion) {
-        this.facturacion = facturacion;
+    public void setFacturacionElectronica(Boolean facturacionElectronica) {
+        this.facturacionElectronica = facturacionElectronica;
     }
 
-    public long getTipoContrato() {
+    public String getTipoContrato() {
         return tipoContrato;
     }
 
-    public void setTipoContrato(long tipoContrato) {
+    public void setTipoContrato(String tipoContrato) {
         this.tipoContrato = tipoContrato;
     }
 
@@ -125,4 +132,5 @@ public class Servicio {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
 }
