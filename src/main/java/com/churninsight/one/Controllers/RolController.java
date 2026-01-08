@@ -18,37 +18,38 @@ public class RolController {
         this.rolService = rolService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Rol>> listarRoles() {
-        return ResponseEntity.ok(rolService.listarRoles());
-    }
+    // @GetMapping
+    // public ResponseEntity<List<Rol>> listarRoles() {
+    // return ResponseEntity.ok(rolService.listarRoles());
+    // }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Rol> obtenerRolPorId(@PathVariable Long id) {
-        return rolService.obtenerRolPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<Rol> obtenerRolPorId(@PathVariable Long id) {
+    // return rolService.obtenerRolPorId(id)
+    // .map(ResponseEntity::ok)
+    // .orElse(ResponseEntity.notFound().build());
+    // }
 
-    @PostMapping
-    public ResponseEntity<Rol> crearRol(@RequestBody Rol rol) {
-        try {
-            Rol nuevoRol = rolService.crearRol(rol);
-            return new ResponseEntity<>(nuevoRol, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+    // @PostMapping
+    // public ResponseEntity<Rol> crearRol(@RequestBody Rol rol) {
+    // try {
+    // Rol nuevoRol = rolService.crearRol(rol);
+    // return new ResponseEntity<>(nuevoRol, HttpStatus.CREATED);
+    // } catch (IllegalArgumentException e) {
+    // return ResponseEntity.badRequest().build();
+    // }
+    // }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Rol> actualizarRol(@PathVariable Long id, @RequestBody Rol rol) {
-        try {
-            Rol rolActualizado = rolService.actualizarRol(id, rol);
-            return ResponseEntity.ok(rolActualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Rol> actualizarRol(@PathVariable Long id, @RequestBody
+    // Rol rol) {
+    // try {
+    // Rol rolActualizado = rolService.actualizarRol(id, rol);
+    // return ResponseEntity.ok(rolActualizado);
+    // } catch (RuntimeException e) {
+    // return ResponseEntity.notFound().build();
+    // }
+    // }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarRol(@PathVariable Long id) {
