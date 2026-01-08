@@ -20,11 +20,16 @@ spring:
       hibernate:
         format_sql: true
 
-  sql:
-    init:
-      platform: postgres
+#   sql:
+#     init:
+#       platform: postgres
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+# logging:
+#   level:
+#     org:
+#       hibernate:
+#         SQL: DEBUG
+#         type:
+#           descriptor:
+#             sql:
+#               BasicBinder: TRACE
