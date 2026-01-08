@@ -1,8 +1,10 @@
 package com.churninsight.one.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,28 +12,25 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
-@Table(name = "roles")
+@Table(name = "permisos")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE roles SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE permisos SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-public class Rol {
+public class Permiso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rol_nombre", nullable = false, unique = true)
+    @Column(name = "permiso_nombre", nullable = false, unique = true)
     private String nombre;
 
     private String descripcion;
 
-    @ManyToMany
-    @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
-    @JsonIgnoreProperties("roles")
-    private List<Permiso> permisos = new ArrayList<>();
+    @ManyToMany(mappedBy = "permisos")
+    @JsonIgnoreProperties("permisos")
+    private List<Rol> roles = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -48,10 +47,10 @@ public class Rol {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Rol() {
+    public Permiso() {
     }
 
-    public Rol(String nombre, String descripcion) {
+    public Permiso(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
@@ -96,12 +95,12 @@ public class Rol {
         this.updatedAt = updatedAt;
     }
 
-    public List<Permiso> getPermisos() {
-        return permisos;
+    public List<Rol> getRoles() {
+        return roles;
     }
 
-    public void setPermisos(List<Permiso> permisos) {
-        this.permisos = permisos;
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
     public LocalDateTime getDeletedAt() {
