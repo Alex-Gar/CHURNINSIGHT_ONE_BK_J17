@@ -1,4 +1,4 @@
-# ChurnInsight – Propuesta POC MVP
+# 📉 ChurnInsight – Propuesta POC MVP
 
 **Propuesta de modelo funcional para el proyecto ChurnInsight**
 
@@ -7,11 +7,14 @@ Propuesta enfocada en la colaboración para el sistema ChurnInsight, basada en u
 - Los avances se documentan de forma progresiva, permitiendo consultar cada ajuste realizado, junto con su respectiva justificación técnica.
 
 
-## 📋 Índice
+# 📋 Índice
 
 **Implementaciones**
 -  [📦 README Original "Compañero Alex" ](#churninsight--guía-de-configuración-inicial)
--  [📦 Ajustes de estructura del proyecto ](#-ajustes-de-estructura-del-proyecto)
+ 
+### Commit "POC MVP: initial project setup (layers, Lombok, H2)"
+
+- [📦 Ajustes de estructura del proyecto ](#-ajustes-de-estructura-del-proyecto)
 -  [📈 Implementacion "LOMBOK" y ajuste "POM""](#-implementación-de-lombok-y-ajustes-en-pom)
 -  [📁 Ajustes de configuración (YAML y perfiles)](#-ajustes-de-configuración-yaml-y-perfiles)
 
@@ -20,6 +23,134 @@ Propuesta enfocada en la colaboración para el sistema ChurnInsight, basada en u
 - [👤 Modelo Cliente y contratos de datos inmutables](#-modelo-cliente-y-contratos-de-datos-inmutables)
 - [🔮 Flujo de Predicción: Controller, Service y Client](#-flujo-de-predicción-controller-service-y-client)
 
+### Commit "flujo completo de predicción de churn y limpieza de servicios de prueba"
+
+- [🧪 Robustecimiento del MVP: normalización de contratos, serialización y manejo de errores](#-flujo-de-predicción-controller-service-y-client)
+- [🧩 Cambio 1: Normalización del contrato externo sin romper el dominio](#-cambio-1-normalización-del-contrato-externo-sin-romper-el-dominio)
+- [🧪 Cambio 2: Flujo MVP preparado para mocks y evolución del modelo DS](#-cambio-2-flujo-mvp-preparado-para-mocks-y-evolución-del-modelo-ds)
+- [🛡️ Cambio 3: Manejo centralizado de errores y validaciones](#-cambio-3-manejo-centralizado-de-errores-y-validaciones)
+
+
+---
+
+# 🧪 Robustecimiento del MVP: normalización de contratos, serialización y manejo de errores
+
+**Se realizaron ajustes estructurales y de infraestructura enfocados en estabilizar el MVP funcional, priorizando la fiabilidad del modelo, la tolerancia a variaciones del contrato externo y una mejor experiencia de error para pruebas e integración con el modelo de Data Science.**
+
+**Este commit consolida decisiones técnicas necesarias para continuar el desarrollo del modelo sin depender del estado actual del equipo de DS.**
+
+## 🧩 Cambio 1: Normalización del contrato externo sin romper el dominio
+
+### Se fortaleció la tolerancia del sistema ante contratos inconsistentes o variables provenientes del exterior, manteniendo un dominio interno confiable y tipado.
+
+## Decisiones clave:
+
+- El dominio sigue trabajando con booleanos reales (Boolean).
+- El contrato externo acepta múltiples representaciones:
+  - "Yes" / "No"
+  - "1" / "0"
+  - "true" / "false"
+  - Variantes como "si", "y", etc.
+- La conversión se realiza en la capa de serialización, no en el dominio.
+- **Qué se hizo:**
+  - Se incorporaron deserializadores personalizados (YesNoToBooleanDeserializer).
+  - Se incorporaron serializadores específicos para enviar datos al modelo DS:
+    - Boolean → Yes / No 
+    - Boolean → 1 / 0
+- Se estandarizó el uso de @JsonCreator en enums para tolerar variaciones de formato (spaces, -, mayúsculas).
+### 👉 Resultado:
+**El dominio queda limpio, consistente y estable, aunque el contrato externo no lo sea.**
+
+
+## [📋 Volver al índice ☝️](#-índice)
+
+--- 
+
+## 🧪 Cambio 2: Flujo MVP preparado para mocks y evolución del modelo DS
+
+**Se ajustó el flujo de integración con el servicio de predicción para garantizar continuidad del desarrollo, aun cuando el modelo DS no esté disponible o no responda.**
+
+### Decisiones clave:
+
+- El MVP no depende del estado del equipo DS para avanzar.
+
+- Se mantiene un cliente de integración único (DsPredictClient).
+
+- El flujo de predicción sigue siendo lineal y explícito.
+
+- **Qué se hizo:**
+
+  - Se apuntó el cliente a un endpoint mock/local para pruebas.
+
+  - Se mantuvo la separación clara entre:
+
+    - Controller (entrada)
+
+    - Service (orquestación)
+
+    - Client (integración)
+
+  - Se eliminaron servicios y clases de prueba temporales ya obsoletas.
+
+### 👉 Resultado: 
+ - **El MVP sigue funcionando, evolucionando y siendo validable sin bloqueos externos.**
+
+## [📋 Volver al índice ☝️](#-índice)
+
+--- 
+## 🛡️ Cambio 3: Manejo centralizado de errores y validaciones
+
+**Se incorporó un manejo global de excepciones para mejorar la claridad de errores durante pruebas y consumo del endpoint.**
+
+### Decisiones clave:
+
+- Los errores deben ser explícitos y accionables.
+- Se evita exponer stacktraces innecesarios.
+- Se centraliza el manejo de errores como preocupación transversal.
+- **Qué se hizo:**
+
+  - Se agregó un GlobalHandlerException.
+
+  - Se manejan explícitamente:
+  - Errores de JSON mal formado
+
+  - Valores inválidos en enums o booleanos
+
+  - Errores de validación (@Valid)
+
+ - Se devuelve información clara sobre:
+
+   - Campo
+
+   - Valor inválido
+
+   - Motivo del error
+
+### 👉 Resultado:
+### **Mejor experiencia de prueba, debugging más rápido y contratos más claros.**
+
+## 🎯 Objetivo del ajuste
+
+**Permitir que el desarrollo continúe de forma independiente, asegurando un modelo interno sólido, contratos tolerantes y un MVP estable, aun cuando las integraciones externas no estén listas o sean cambiantes.**
+
+## 🍱 Beneficio
+
+- Dominio confiable y tipado
+
+- Contratos flexibles sin contaminar el modelo
+
+- MVP estable para pruebas y evolución
+
+- Menos fricción en integración
+
+- Base preparada para histórico de predicciones
+
+# 🧱 Impacto técnico
+
+### - **Este commit introduce complejidad solo en las capas de infraestructura, de forma controlada y consciente.**
+### - **No se altera la lógica de negocio ni el flujo funcional del MVP; se refuerza su estabilidad y capacidad de evolución.**
+
+## [📋 Volver al índice ☝️](#-índice)
 
 ---
 
@@ -213,36 +344,64 @@ Este ajuste no introduce lógica adicional ni altera el comportamiento funcional
 
 ---
 
-# 📦 Ajustes de "ENUMS" estructura del proyecto
 
-**Se realizaron ajustes menores en la estructura de carpetas con el objetivo de ordenar el proyecto y alinearlo con una separación básica de responsabilidades, sin alterar la lógica funcional del sistema.**
 
-Estos cambios buscan facilitar el mantenimiento del código y preparar la base para los siguientes pasos del desarrollo.
+# 📦 Ajustes de ENUMS y estandarización de valores de dominio
 
-**Cambios realizados:**
+**Se realizó la creación y estandarización de los ENUMS del dominio, con el objetivo de representar de forma explícita los valores permitidos en el sistema y evitar el uso de strings o valores ambiguos provenientes del contrato externo.** 
 
-- Se movió la carpeta repository al nivel raíz del proyecto, junto a controller y la clase principal.
-- Se eliminó la carpeta entities dentro de models.
-- Se reorganizó el dominio por entidad funcional, creando un paquete por entidad.
-- Cada entidad contiene su clase JPA y un subpaquete dto para objetos de transferencia de datos.
-- Se simplificó la estructura de service, eliminando la carpeta implementations.
-- Se mantuvieron los servicios con nombres autodescriptivos por entidad.
-- Se centralizó la lógica auxiliar en una carpeta utils/helper.
-- Se separó el manejo de excepciones como una preocupación transversal del sistema.
+**Estos cambios no alteran el comportamiento funcional, pero sí fortalecen la consistencia del modelo de dominio y preparan la base para validaciones más estrictas y evolución futura del proyecto.**
 
-**Objetivo del ajuste:**
+## 🔧 Cambios realizados
 
-Establecer una estructura clara y coherente que evite mezclar responsabilidades, reduzca ruido innecesario y permita que el proyecto mantenga un nivel técnico consistente conforme avance el desarrollo.
+- Se creó el paquete enums para centralizar los valores categóricos del dominio.
 
-**🍱 Beneficio:**
+- Se definieron los siguientes ENUMS:
 
-- Mejor legibilidad
-- Menor acoplamiento
-- Base más clara para futuros cambios
+  - Genero → MALE, FEMALE, OTHER
 
-**🧱 Impacto técnico**
+  - MetodoPago → ELECTRONIC_CHECK, BANK_TRANSFER, CREDIT_CARD
 
-Estos ajustes no agregan nuevas funcionalidades ni representan mejoras visibles para el usuario final. Su propósito es evitar desorden estructural, facilitar la lectura del código y prevenir deuda técnica temprana.
+  - ServicioInternet → FIBER_OPTIC, DSL, NONE
+
+  - TipoContrato → MONTH_TO_MONTH, ONE_YEAR, TWO_YEAR
+
+- Se integraron los ENUMS en:
+
+  -La entidad Cliente
+
+  -El DTO DatosConsultaChurnCliente
+
+- Se utilizó @Enumerated(EnumType.STRING) para:
+
+  - Persistir los valores como texto en base de datos
+
+  - Evitar problemas ante cambios de orden en los ENUMS
+
+## 🎯 Objetivo del ajuste
+
+- Evitar valores inválidos o inconsistentes en el dominio
+
+- Desacoplar el modelo interno de representaciones externas (JSON / DS)
+
+- Facilitar validaciones, mantenimiento y refactorizaciones futuras
+
+- Preparar el dominio para reglas de negocio más claras
+
+## 🍱 Beneficios
+
+- Mayor claridad semántica del modelo
+
+- Menor riesgo de errores por valores mágicos
+
+- Dominio más expresivo y auto-documentado
+
+- Base sólida para validaciones y mapeos futuros
+
+# 🧱 Impacto técnico
+
+**Estos ajustes no agregan nuevas funcionalidades ni cambian el flujo actual.**
+**Su propósito es fortalecer el modelo de dominio, reducir ambigüedad y prevenir deuda técnica desde etapas tempranas del desarrollo.**
 
 ## [📋 Volver al índice ☝️](#-índice)
 
