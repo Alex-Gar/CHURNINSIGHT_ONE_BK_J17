@@ -1,37 +1,38 @@
 package com.churninsight.one.models.entities;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "roles")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE roles SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
+// @SQLDelete(sql = "UPDATE roles SET deleted_at = NOW() WHERE id = ?")
+// @SQLRestriction("deleted_at IS NULL")
 public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rol_nombre", nullable = false, unique = true)
+    @Column(name = "rol_nombre", nullable = false)
     private String nombre;
 
     private String descripcion;
 
-    @ManyToMany
-    @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
-    @JsonIgnoreProperties("roles")
-    private List<Permiso> permisos = new ArrayList<>();
+    // @ManyToMany
+    // @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
+    // @JsonIgnoreProperties("roles")
+    // private List<Permiso> permisos = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -43,18 +44,18 @@ public class Rol {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    // @PreUpdate
+    // protected void onUpdate() {
+    //     this.updatedAt = LocalDateTime.now();
+    // }
 
-    public Rol() {
-    }
+    // public Rol() {
+    // }
 
-    public Rol(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
+    // public Rol(String nombre, String descripcion) {
+    //     this.nombre = nombre;
+    //     this.descripcion = descripcion;
+    // }
 
     public Long getId() {
         return id;
@@ -96,13 +97,13 @@ public class Rol {
         this.updatedAt = updatedAt;
     }
 
-    public List<Permiso> getPermisos() {
-        return permisos;
-    }
+    // public List<Permiso> getPermisos() {
+    //     return permisos;
+    // }
 
-    public void setPermisos(List<Permiso> permisos) {
-        this.permisos = permisos;
-    }
+    // public void setPermisos(List<Permiso> permisos) {
+    //     this.permisos = permisos;
+    // }
 
     public LocalDateTime getDeletedAt() {
         return deletedAt;
