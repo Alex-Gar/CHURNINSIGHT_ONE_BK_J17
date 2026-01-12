@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.churninsight.one.models.entities.Rol;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.services.RolService;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/roles")
 public class RolController {
 
     @Autowired

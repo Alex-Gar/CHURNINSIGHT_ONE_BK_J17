@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.churninsight.one.models.entities.Rol;
+import com.churninsight.one.models.entities.rol.Rol;
+import com.churninsight.one.models.repositories.PermisoRepository;
 import com.churninsight.one.models.repositories.RolRepository;
 
 @Service
@@ -16,7 +17,9 @@ public class RolService {
 
     @Autowired
     private RolRepository rolRepository;
-    // private final PermisoRepository permisoRepository;
+
+    @Autowired
+    private PermisoRepository permisoRepository;
 
     // public RolService(RolRepository rolRepository, PermisoRepository
     // permisoRepository) {

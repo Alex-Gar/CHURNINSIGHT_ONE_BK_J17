@@ -25,7 +25,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/usuarios")
 @Tag(name = "Churn", description = "Endpoints de gestión de usuarios")
-
 public class UsuarioController {
 
     @Autowired
