@@ -33,7 +33,8 @@ public class UsuarioController {
     // = "0") Integer pagina,
     // @RequestParam(defaultValue = "10") Integer tamanio) {
     // Page<Usuario> data = this.usuarioService.listar(pagina, tamanio);
-    // ApiResponse response = new ApiResponse(data.get(), "Lista de usuariosobtenida con éxito", true);
+    // ApiResponse response = new ApiResponse(data.get(), "Lista de usuariosobtenida
+    // con éxito", true);
     // return new ResponseEntity<>(response, HttpStatus.OK);
     // }
 
@@ -43,7 +44,6 @@ public class UsuarioController {
     // ApiResponse resultado = this.usuarioService.buscarPorId(id);
     // return new ResponseEntity<>(resultado, HttpStatus.OK);
     // }
-    
 
     @GetMapping
     public ResponseEntity<ApiResponse> listarUsuariosActivos(@RequestParam(defaultValue = "0") Integer pagina,
@@ -52,6 +52,7 @@ public class UsuarioController {
         ApiResponse response = new ApiResponse(data.get(), "Lista de usuarios obtenida con éxito", true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/eliminados")
     public ResponseEntity<ApiResponse> listarUsuariosEliminados(@RequestParam(defaultValue = "0") Integer pagina,
             @RequestParam(defaultValue = "10") Integer tamanio) {
@@ -73,7 +74,8 @@ public class UsuarioController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> editarUsuarios(@Valid @PathVariable String id, @RequestBody UsuarioDto usuarioDto) {
+    public ResponseEntity<ApiResponse> editarUsuarios(@Valid @PathVariable String id,
+            @RequestBody UsuarioDto usuarioDto) {
         ApiResponse usuarioEditado = this.usuarioService.editar(usuarioDto);
         return new ResponseEntity<>(usuarioEditado, HttpStatus.OK);
     }
@@ -82,5 +84,17 @@ public class UsuarioController {
     public ResponseEntity<ApiResponse> eliminarUsuario(@PathVariable String id) {
         this.usuarioService.borradoLogico(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{usuarioId}/roles/{rolId}")
+    public ResponseEntity<ApiResponse> asignarRol(@PathVariable String usuarioId, @PathVariable Long rolId) {
+        ApiResponse response = this.usuarioService.asignarRol(usuarioId, rolId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{usuarioId}/roles/{rolId}")
+    public ResponseEntity<ApiResponse> removerRol(@PathVariable String usuarioId, @PathVariable Long rolId) {
+        ApiResponse response = this.usuarioService.removerRol(usuarioId, rolId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

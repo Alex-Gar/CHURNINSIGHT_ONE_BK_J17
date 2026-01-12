@@ -29,14 +29,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     Page<Usuario> findAllActiveUsuarios(Pageable pageable);
 
     @Query("""
-        SELECT u FROM Usuario u
-        WHERE u.deletedAt IS NULL AND u.id = :id
-    """)
+                SELECT u FROM Usuario u
+                WHERE u.deletedAt IS NULL AND u.id = :id
+            """)
     Optional<Usuario> findActiveById(@Param("id") String id);
 
     @Query("""
-        SELECT u FROM Usuario u
-        WHERE u.deletedAt IS NOT NULL
-    """)
+                SELECT u FROM Usuario u
+                WHERE u.deletedAt IS NOT NULL
+            """)
     Page<Usuario> findDeleted(Pageable pageable);
+
+    Optional<Usuario> findByEmail(String email);
 }

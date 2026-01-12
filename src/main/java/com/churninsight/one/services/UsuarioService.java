@@ -26,4 +26,7 @@ public interface UsuarioService {
 
     public ApiResponse borradoLogico(String id);
 
+    public ApiResponse asignarRol(String usuarioId, Long rolId);
+
+    public ApiResponse removerRol(String usuarioId, Long rolId);
 }

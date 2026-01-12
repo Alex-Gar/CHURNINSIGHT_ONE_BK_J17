@@ -8,8 +8,21 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/churninsight_db
     username: postgres
-    password: 246800
+    password: 12345
     driver-class-name: org.postgresql.Driver
+
+security:
+  jwt:
+    key:
+      private: ClaveDeSecretoSuperSecretosaParaElDesarrollo12345
+    user:
+      generator: churninsight_backend
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
