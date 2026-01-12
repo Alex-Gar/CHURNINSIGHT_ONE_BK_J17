@@ -1,22 +1,30 @@
-package com.churninsight.one.models.entities;
+package com.churninsight.one.models.entities.permiso;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.churninsight.one.models.entities.rol.Rol;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "permisos")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE permisos SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
+// @SQLDelete(sql = "UPDATE permisos SET deleted_at = NOW() WHERE id = ?")
+// @SQLRestriction("deleted_at IS NULL")
 public class Permiso {
 
     @Id
@@ -30,7 +38,7 @@ public class Permiso {
 
     @ManyToMany(mappedBy = "permisos")
     @JsonIgnoreProperties("permisos")
-    private List<Rol> roles = new ArrayList<>();
+    private Set<Rol> roles = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -45,14 +53,6 @@ public class Permiso {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Permiso() {
-    }
-
-    public Permiso(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -79,6 +79,14 @@ public class Permiso {
         this.descripcion = descripcion;
     }
 
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -95,14 +103,6 @@ public class Permiso {
         this.updatedAt = updatedAt;
     }
 
-    public List<Rol> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
-    }
-
     public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
@@ -110,4 +110,5 @@ public class Permiso {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
 }
