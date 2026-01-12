@@ -14,10 +14,12 @@ import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.security.JwtUtils;
 import com.churninsight.one.services.UsuarioService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticación", description = "Endpoints de autenticación y registro")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -31,6 +33,7 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
+    @Tag(name = "Login", description = "Endpoint para autenticarse con email y contraseña")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         try {
@@ -48,6 +51,7 @@ public class AuthController {
         }
     }
 
+    @Tag(name = "Registro", description = "Endpoint para registrar un nuevo usuario")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(
             @RequestBody @Valid com.churninsight.one.models.entities.usuario.UsuarioDto usuarioDto) {

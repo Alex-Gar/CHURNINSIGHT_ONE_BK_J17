@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.churninsight.one.models.entities.Rol;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.repositories.RolRepository;
 import com.churninsight.one.models.repositories.UsuarioRepository;
@@ -20,25 +20,12 @@ public class DataInitializer {
     CommandLineRunner initDatabase(RolRepository rolRepository, UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder) {
         return args -> {
-            // Create Roles if not exist
-            Rol adminRol = rolRepository.findByNombre("ROLE_ADMIN").orElseGet(() -> {
-                Rol rol = new Rol();
-                rol.setNombre("ROLE_ADMIN");
-                rol.setDescripcion("Administrador del sistema");
-                rol.setCreatedAt(LocalDateTime.now());
-                return rolRepository.save(rol);
-            });
-
-            Rol userRol = rolRepository.findByNombre("ROLE_USER").orElseGet(() -> {
-                Rol rol = new Rol();
-                rol.setNombre("ROLE_USER");
-                rol.setDescripcion("Usuario estandar");
-                rol.setCreatedAt(LocalDateTime.now());
-                return rolRepository.save(rol);
-            });
+            // Get Roles from database
+            Rol adminRol = rolRepository.findByNombre("ADMIN").orElse(null);
+            Rol userRol = rolRepository.findByNombre("USUARIO").orElse(null);
 
             // Create Admin User if not exist
-            if (usuarioRepository.findByEmail("admin@churninsight.com").isEmpty()) {
+            if (usuarioRepository.findByEmail("admin@churninsight.com").isEmpty() && adminRol != null) {
                 Usuario admin = new Usuario();
                 admin.setNombre("Admin");
                 admin.setPApellido("System");

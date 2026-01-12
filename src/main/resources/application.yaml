@@ -11,27 +11,24 @@ spring:
     password: 12345
     driver-class-name: org.postgresql.Driver
 
-security:
-  jwt:
-    key:
-      private: ClaveDeSecretoSuperSecretosaParaElDesarrollo12345
-    user:
-      generator: churninsight_backend
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update 
+      ddl-auto: none 
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+security:
+  jwt:
+    key:
+      private: mySecretKeyForJWTTokenGenerationThatIsVeryLongAndSecure12345
+      public: myPublicKeyForJWTTokenValidation
+    user:
+      generator: churninsight-api
+    time:
+      expiration: 86400000
 
 #   sql:
 #     init:

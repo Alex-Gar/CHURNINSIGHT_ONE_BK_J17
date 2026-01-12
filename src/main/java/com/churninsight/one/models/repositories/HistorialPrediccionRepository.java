@@ -11,34 +11,31 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.churninsight.one.models.entities.usuario.Usuario;
+import com.churninsight.one.models.entities.historialPredicciones.HistorialPrediccion;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, String> {
-
+public interface HistorialPrediccionRepository extends JpaRepository<HistorialPrediccion, Long> {
     @Modifying
     @Transactional
     @Query("""
-            UPDATE Usuario u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
+            UPDATE HistorialPrediccion u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
             """)
-    Integer softDeleteById(String id); 
+    Integer softDeleteById(Long id);
 
     @Query("""
-            SELECT u FROM Usuario u WHERE u.deletedAt is NULL
+            SELECT u FROM HistorialPrediccion u WHERE u.deletedAt is NULL
             """)
-    Page<Usuario> findAllActiveUsuarios(Pageable pageable);
+    Page<HistorialPrediccion> findAllActiveHistorialPrediccions(Pageable pageable);
 
     @Query("""
-                SELECT u FROM Usuario u
+                SELECT u FROM HistorialPrediccion u
                 WHERE u.deletedAt IS NULL AND u.id = :id
             """)
-    Optional<Usuario> findActiveById(@Param("id") String id);
+    Optional<HistorialPrediccion> findActiveById(@Param("id") Long id);
 
     @Query("""
-                SELECT u FROM Usuario u
+                SELECT u FROM HistorialPrediccion u
                 WHERE u.deletedAt IS NOT NULL
             """)
-    Page<Usuario> findDeleted(Pageable pageable);
-
-    Optional<Usuario> findByEmail(String email);
+    Page<HistorialPrediccion> findDeleted(Pageable pageable);
 }

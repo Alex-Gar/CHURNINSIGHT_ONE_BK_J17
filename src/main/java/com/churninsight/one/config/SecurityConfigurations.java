@@ -27,17 +27,20 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        // GET: Cualquier usuario autenticado (READ)
-                        .requestMatchers(HttpMethod.GET, "/roles/**").authenticated()
-                        // POST, PUT, DELETE: Solo ADMIN puede modificar
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/webjars/**").permitAll()
+                        // GET: Solo usuarios con rol USUARIO o ADMIN
+                        .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/roles/**").hasAnyRole("USUARIO", "ADMIN")
+                        // Usuarios: POST, PUT, DELETE solo para ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
+                        // Roles: POST, PUT, DELETE solo para ADMIN
                         .requestMatchers(HttpMethod.POST, "/roles/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/roles/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/roles/**").hasRole("ADMIN")
-                        // Validaciones específicas de usuarios
-                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/usuarios/**")
-                        .hasRole("ADMIN")
-                        .requestMatchers("/api/usuarios/*/roles/**").hasRole("ADMIN")
-                        .requestMatchers("/api/usuarios/eliminados").hasRole("ADMIN")
+                        // Gestión de permisos: Solo ADMIN
+                        .requestMatchers("/permisos/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

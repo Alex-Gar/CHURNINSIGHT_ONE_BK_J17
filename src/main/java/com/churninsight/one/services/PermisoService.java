@@ -1,12 +1,13 @@
 package com.churninsight.one.services;
 
-import com.churninsight.one.models.entities.Permiso;
-import com.churninsight.one.models.repositories.PermisoRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.churninsight.one.models.entities.permiso.Permiso;
+import com.churninsight.one.models.repositories.PermisoRepository;
 
 @Service
 @Transactional

@@ -12,6 +12,7 @@ import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.exceptions.ResourceNotFoundException;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.entities.usuario.UsuarioDto;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -65,6 +66,11 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoUsuario.setGenero(usuarioDto.genero());
             nuevoUsuario.setTieneConyuge(usuarioDto.tieneConyuge());
             nuevoUsuario.setTieneDependientes(usuarioDto.tieneDependientes());
+
+            // Asignar rol USUARIO por defecto
+            Rol rolUsuario = rolRepository.findByNombre("USUARIO")
+                    .orElseThrow(() -> new ResourceNotFoundException("Rol USUARIO no encontrado en la base de datos"));
+            nuevoUsuario.setRoles(java.util.List.of(rolUsuario));
 
             Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
             System.out.println("ID: " + nuevoUsuario.getId());
@@ -161,7 +167,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = this.usuarioRepository.findActiveById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("usuario", "id", usuarioId));
 
-        com.churninsight.one.models.entities.Rol rol = rolRepository.findById(rolId)
+        Rol rol = rolRepository.findById(rolId)
                 .orElseThrow(() -> new ResourceNotFoundException("rol", "id", rolId));
 
         if (!usuario.getRoles().contains(rol)) {
@@ -179,7 +185,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = this.usuarioRepository.findActiveById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("usuario", "id", usuarioId));
 
-        com.churninsight.one.models.entities.Rol rol = rolRepository.findById(rolId)
+        Rol rol = rolRepository.findById(rolId)
                 .orElseThrow(() -> new ResourceNotFoundException("rol", "id", rolId));
 
         if (usuario.getRoles().contains(rol)) {

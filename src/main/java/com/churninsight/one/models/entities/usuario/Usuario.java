@@ -21,7 +21,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import com.churninsight.one.models.entities.Rol;
+import com.churninsight.one.models.entities.rol.Rol;
 
 @Entity
 @Table(name = "usuarios")

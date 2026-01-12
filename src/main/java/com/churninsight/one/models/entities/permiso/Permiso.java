@@ -1,37 +1,44 @@
-package com.churninsight.one.models.entities;
+package com.churninsight.one.models.entities.permiso;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.churninsight.one.models.entities.rol.Rol;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "roles")
+@Table(name = "permisos")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE roles SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
-public class Rol {
+// @SQLDelete(sql = "UPDATE permisos SET deleted_at = NOW() WHERE id = ?")
+// @SQLRestriction("deleted_at IS NULL")
+public class Permiso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rol_nombre", nullable = false, unique = true)
+    @Column(name = "permiso_nombre", nullable = false, unique = true)
     private String nombre;
 
     private String descripcion;
 
-    @ManyToMany
-    @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
-    @JsonIgnoreProperties("roles")
-    private List<Permiso> permisos = new ArrayList<>();
+    @ManyToMany(mappedBy = "permisos")
+    @JsonIgnoreProperties("permisos")
+    private Set<Rol> roles = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -46,14 +53,6 @@ public class Rol {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Rol() {
-    }
-
-    public Rol(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -80,6 +79,14 @@ public class Rol {
         this.descripcion = descripcion;
     }
 
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -96,14 +103,6 @@ public class Rol {
         this.updatedAt = updatedAt;
     }
 
-    public List<Permiso> getPermisos() {
-        return permisos;
-    }
-
-    public void setPermisos(List<Permiso> permisos) {
-        this.permisos = permisos;
-    }
-
     public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
@@ -111,4 +110,5 @@ public class Rol {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
 }
