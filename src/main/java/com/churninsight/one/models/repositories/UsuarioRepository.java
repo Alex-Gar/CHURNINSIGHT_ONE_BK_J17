@@ -39,4 +39,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
                 WHERE u.deletedAt IS NOT NULL
             """)
     Page<Usuario> findDeleted(Pageable pageable);
+
+    Optional<Usuario> findByEmail(String email);
 }

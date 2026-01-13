@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.churninsight.one.models.entities.permiso.Permiso;
 import com.churninsight.one.services.PermisoService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/permisos")
+@Tag(name = "Permisos", description = "Endpoints de gestión de permisos")
 public class PermisoController {
 
     private final PermisoService permisoService;
@@ -26,11 +29,13 @@ public class PermisoController {
         this.permisoService = permisoService;
     }
 
+    @Tag(name = "Listar permisos", description = "Obtener lista de todos los permisos")
     @GetMapping
     public ResponseEntity<List<Permiso>> listarPermisos() {
         return ResponseEntity.ok(permisoService.listarPermisos());
     }
 
+    @Tag(name = "Obtener permiso por ID", description = "Obtener un permiso por su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Permiso> obtenerPermisoPorId(@PathVariable Long id) {
         return permisoService.obtenerPermisoPorId(id)
@@ -38,6 +43,7 @@ public class PermisoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Tag(name = "Crear permiso", description = "Crear un nuevo permiso")
     @PostMapping
     public ResponseEntity<Permiso> crearPermiso(@RequestBody Permiso permiso) {
         try {
@@ -48,6 +54,7 @@ public class PermisoController {
         }
     }
 
+    @Tag(name = "Actualizar permiso", description = "Actualizar un permiso existente")
     @PutMapping("/{id}")
     public ResponseEntity<Permiso> actualizarPermiso(@PathVariable Long id, @RequestBody Permiso permiso) {
         try {
@@ -58,6 +65,7 @@ public class PermisoController {
         }
     }
 
+    @Tag(name = "Eliminar permiso", description = "Eliminar un permiso por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarPermiso(@PathVariable Long id) {
         try {
