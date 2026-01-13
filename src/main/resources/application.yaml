@@ -6,7 +6,7 @@ spring:
     name: CHURNINSIGHT_ONE_BK_J17
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/churninsight_db
+    url: jdbc:postgresql://localhost:5432/churninsight
     username: postgres
     password: 246800
     driver-class-name: org.postgresql.Driver
@@ -14,17 +14,22 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update 
+      ddl-auto: none 
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-  sql:
-    init:
-      platform: postgres
+#   sql:
+#     init:
+#       platform: postgres
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+# logging:
+#   level:
+#     org:
+#       hibernate:
+#         SQL: DEBUG
+#         type:
+#           descriptor:
+#             sql:
+#               BasicBinder: TRACE
