@@ -1,7 +1,9 @@
-package com.churninsight.one.models.entities.predicion;
+package com.churninsight.one.models.entities.prediccion;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -15,13 +17,13 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "prediccion")
 @EntityListeners(AuditingEntityListener.class)
-public class Predicion {
+public class Prediccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_usuario")
+    @Column(name = "id_usuario", nullable = false)
     private String idUsuario;
 
     @Column(name = "churn")
@@ -33,9 +35,11 @@ public class Predicion {
     @Column(name = "probabilidad")
     private Double probabilidad;
 
-    @Column(name = "created_at")
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
