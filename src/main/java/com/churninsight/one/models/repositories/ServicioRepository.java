@@ -19,7 +19,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
         @Query("""
                         UPDATE Servicio s SET s.deletedAt = CURRENT_TIMESTAMP WHERE s.id = :id
                         """)
-        int softDeleteById(@Param("id") Long id);
+        Integer softDeleteById(@Param("id") Long id);
 
         @Query("""
                         SELECT s FROM Servicio s WHERE s.deletedAt IS NULL

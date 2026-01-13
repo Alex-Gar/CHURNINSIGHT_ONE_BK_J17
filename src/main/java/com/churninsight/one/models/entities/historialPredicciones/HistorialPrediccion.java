@@ -1,10 +1,9 @@
-package com.churninsight.one.models.entities;
+package com.churninsight.one.models.entities.historialPredicciones;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -13,48 +12,36 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
-
 @Entity
-@Table(name = "roles")
+@Table(name = "historial_predicciones")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE roles SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
-public class Rol {
+public class HistorialPrediccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rol_nombre", nullable = false, unique = true)
-    private String nombre;
+    @Column(name = "churn")
+    private Boolean churn;
 
-    private String descripcion;
+    @Column(name = "prevision")
+    private String prevision;
+
+    @Column(name = "probabilidad")
+    private Double probabilidad;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public Rol() {
-    }
-
-    public Rol(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
 
     public Long getId() {
         return id;
@@ -64,20 +51,28 @@ public class Rol {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Boolean getChurn() {
+        return churn;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setChurn(Boolean churn) {
+        this.churn = churn;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getPrevision() {
+        return prevision;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setPrevision(String prevision) {
+        this.prevision = prevision;
+    }
+
+    public Double getProbabilidad() {
+        return probabilidad;
+    }
+
+    public void setProbabilidad(Double probabilidad) {
+        this.probabilidad = probabilidad;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -103,4 +98,7 @@ public class Rol {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+
+    
 }

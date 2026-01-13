@@ -11,33 +11,33 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.churninsight.one.models.entities.rol.Rol;
+import com.churninsight.one.models.entities.permiso.Permiso;
 
 @Repository
-public interface RolRepository extends JpaRepository<Rol, Long> {
-        Optional<Rol> findByNombre(String nombre);
+public interface PermisoRepository extends JpaRepository<Permiso, Long> {
+        Optional<Permiso> findByNombre(String nombre);
 
         @Modifying
         @Transactional
         @Query("""
-                        UPDATE Rol u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
+                        UPDATE Permiso u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
                         """)
-        Integer softDeleteById(Long id);
+        int softDeleteById(Long id);
 
         @Query("""
-                        SELECT u FROM Rol u WHERE u.deletedAt is NULL
+                        SELECT u FROM Permiso u WHERE u.deletedAt is NULL
                         """)
-        Page<Rol> findAllActiveRoles(Pageable pageable);
+        Page<Permiso> findAllActivePermiso(Pageable pageable);
 
         @Query("""
-                            SELECT u FROM Rol u
+                            SELECT u FROM Permiso u
                             WHERE u.deletedAt IS NULL AND u.id = :id
                         """)
-        Optional<Rol> findActiveById(@Param("id") Long id);
+        Optional<Permiso> findActiveById(@Param("id") Long id);
 
         @Query("""
-                            SELECT u FROM Rol u
+                            SELECT u FROM Permiso u
                             WHERE u.deletedAt IS NOT NULL
                         """)
-        Page<Rol> findDeleted(Pageable pageable);
+        Page<Permiso> findDeleted(Pageable pageable);
 }
