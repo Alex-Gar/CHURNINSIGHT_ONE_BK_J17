@@ -26,19 +26,21 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/webjars/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml",
+                                "/webjars/**")
+                        .permitAll()
                         // GET: Solo usuarios con rol USUARIO o ADMIN
                         .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("USUARIO", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/roles/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyRole("USUARIO", "ADMIN")
                         // Usuarios: POST, PUT, DELETE solo para ADMIN
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
                         // Roles: POST, PUT, DELETE solo para ADMIN
-                        .requestMatchers(HttpMethod.POST, "/roles/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/roles/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasRole("ADMIN")
                         // Gestión de permisos: Solo ADMIN
                         .requestMatchers("/permisos/**").hasRole("ADMIN")
                         .anyRequest().authenticated())

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,29 +17,33 @@ import com.churninsight.one.models.entities.usuario.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
 
-    @Modifying
-    @Transactional
-    @Query("""
-            UPDATE Usuario u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
-            """)
-    Integer softDeleteById(String id); 
+        @Modifying
+        @Transactional
+        @Query("""
+                        UPDATE Usuario u SET u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id
+                        """)
+        Integer softDeleteById(String id);
 
-    @Query("""
-            SELECT u FROM Usuario u WHERE u.deletedAt is NULL
-            """)
-    Page<Usuario> findAllActiveUsuarios(Pageable pageable);
+        @Query("""
+                        SELECT u FROM Usuario u WHERE u.deletedAt is NULL
+                        """)
+        Page<Usuario> findAllActiveUsuarios(Pageable pageable);
 
-    @Query("""
-                SELECT u FROM Usuario u
-                WHERE u.deletedAt IS NULL AND u.id = :id
-            """)
-    Optional<Usuario> findActiveById(@Param("id") String id);
+        @Query("""
+                            SELECT u FROM Usuario u
+                            WHERE u.deletedAt IS NULL AND u.id = :id
+                        """)
+        Optional<Usuario> findActiveById(@Param("id") String id);
 
-    @Query("""
-                SELECT u FROM Usuario u
-                WHERE u.deletedAt IS NOT NULL
-            """)
-    Page<Usuario> findDeleted(Pageable pageable);
+        @Query("""
+                            SELECT u FROM Usuario u
+                            WHERE u.deletedAt IS NOT NULL
+                        """)
+        Page<Usuario> findDeleted(Pageable pageable);
 
-    Optional<Usuario> findByEmail(String email);
+        @EntityGraph(attributePaths = {
+                        "roles",
+                        "roles.permisos"
+        })
+        Optional<Usuario> findByEmail(String email);
 }
