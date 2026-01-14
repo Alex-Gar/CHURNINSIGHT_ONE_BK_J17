@@ -9,8 +9,10 @@ import java.util.List;
 
 public interface PrediccionRepository extends JpaRepository<Prediccion, Long> {
 
+    // Predicciones activas por usuario
     List<Prediccion> findByIdUsuarioAndDeletedAtIsNull(String idUsuario);
 
+    // Todas las predicciones activas
     List<Prediccion> findAllByDeletedAtIsNull();
 
     @Query("""

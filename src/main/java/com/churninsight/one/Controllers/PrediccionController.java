@@ -44,9 +44,10 @@ public class PrediccionController {
                 )
         );
     }
-    //2. GET -> listar predicciones activas
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<PrediccionResponse>> listar(){
+
+    //2. GET -> Listar predicciones activas por usuario
+    @GetMapping
+    public ResponseEntity<List<PrediccionResponse>>listarActivas(){
         List<PrediccionResponse> response = prediccionService.listarActivas()
                 .stream()
                 .map(p -> new PrediccionResponse(
@@ -58,7 +59,27 @@ public class PrediccionController {
                         p.getCreatedAt()
                 ))
                 .toList();
-                return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
+    }
+
+    //3. GET -> listar predicciones por usuario
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<PrediccionResponse>> listar(
+            @PathVariable String idUsuario
+    ){
+        List<PrediccionResponse> response = prediccionService
+                .listarPorUsuario(idUsuario)
+                .stream()
+                .map(p -> new PrediccionResponse(
+                        p.getId(),
+                        p.getIdUsuario(),
+                        p.getChurn(),
+                        p.getPrevision(),
+                        p.getProbabilidad(),
+                        p.getCreatedAt()
+                ))
+                .toList();
+            return ResponseEntity.ok(response);
     }
 
     //4. DELETE -> Borrado lógico por usuario

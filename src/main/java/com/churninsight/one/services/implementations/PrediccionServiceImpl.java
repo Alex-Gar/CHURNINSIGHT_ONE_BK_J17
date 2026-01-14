@@ -66,13 +66,7 @@ public class PrediccionServiceImpl implements PrediccionService {
 
     }
 
-    // 2. Buscar predicciones activas por usuario
-    @Override
-    public List<Prediccion> buscarPorUsuario(String idUsuario){
-        return prediccionRepository.findByIdUsuarioAndDeletedAtIsNull(idUsuario);
-    }
-
-    //3. Eliminar lógico (Soft Delete)
+    //2. Eliminar lógico (Soft Delete)
     @Override
     public void eliminarLogicoPorUsuario(String idUsuario) {
         List<Prediccion> activas=
@@ -84,13 +78,13 @@ public class PrediccionServiceImpl implements PrediccionService {
         }
         prediccionRepository.saveAll(activas);
     }
-    //4. Listar todas las activas en el sistema
+    //3. Listar todas las activas en el sistema
     @Override
     public List<Prediccion> listarActivas() {
         return prediccionRepository.findAllByDeletedAtIsNull();
     }
 
-    //5. Métodos para Estadísticas usando los @Query del Repository
+    //4. Métodos para Estadísticas usando los @Query del Repository
     @Override
     public Long obtenerTotalEvaluados(){
         return prediccionRepository.totalEvaluados();
@@ -99,6 +93,11 @@ public class PrediccionServiceImpl implements PrediccionService {
     @Override
     public Long obtenerTotalChurn(){
         return prediccionRepository.totalChurn();
+    }
+
+    @Override
+    public List<Prediccion> listarPorUsuario(String idUsuario) {
+        return prediccionRepository.findByIdUsuarioAndDeletedAtIsNull(idUsuario);
     }
 
 }
