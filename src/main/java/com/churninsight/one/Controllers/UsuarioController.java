@@ -93,4 +93,18 @@ public class UsuarioController {
         this.usuarioService.borradoLogico(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Tag(name = "Asignar rol a usuario", description = "Endpoint para asignar rol a usuario")
+    @PostMapping("/{usuarioId}/roles/{rolId}")
+    public ResponseEntity<ApiResponse> asignarRol(@PathVariable String usuarioId, @PathVariable Long rolId) {
+        ApiResponse response = this.usuarioService.asignarRol(usuarioId, rolId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Tag(name = "Remover rol de usuario", description = "Endpoint para remover rol de usuario")
+    @DeleteMapping("/{usuarioId}/roles/{rolId}")
+    public ResponseEntity<ApiResponse> removerRol(@PathVariable String usuarioId, @PathVariable Long rolId) {
+        ApiResponse response = this.usuarioService.removerRol(usuarioId, rolId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

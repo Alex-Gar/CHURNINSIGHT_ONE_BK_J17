@@ -401,99 +401,31 @@ VALUES
 ------------------------------------------------------------------------
 CREATE TABLE
    usuarios_roles (
-      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       usuario_id VARCHAR(10) NOT NULL,
       rol_id BIGINT NOT NULL,
-      created_at TIMESTAMP NOT NULL,
-      updated_at TIMESTAMP NOT NULL,
-      deleted_at TIMESTAMP NULL,
       FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
-      FOREIGN KEY (rol_id) REFERENCES roles (id)
+      FOREIGN KEY (rol_id) REFERENCES roles (id) PRIMARY KEY (usuario_id, rol_id),
+      CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+      CONSTRAINT fk_rol FOREIGN KEY (rol_id) REFERENCES roles (id),
    );
 
 INSERT INTO
-   usuarios_roles (
-      usuario_id,
-      rol_id,
-      created_at,
-      updated_at,
-      deleted_at
-   )
+   usuarios_roles (usuario_id, rol_id,)
 VALUES
    -- Usuarios activos
-   (
-      'USR000001',
-      1,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ), -- Admin
-   (
-      'USR000002',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
-   (
-      'USR000003',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
-   (
-      'USR000004',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
+   ('USR000001', 1,), -- Admin
+   ('USR000002', 2,),
+   ('USR000003', 2,),
+   ('USR000004', 2,),
    -- Usuario con doble rol
-   (
-      'USR000005',
-      1,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
-   (
-      'USR000005',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
+   ('USR000005', 1,),
+   ('USR000005', 2,),
    -- Roles dados de baja (soft delete)
-   (
-      'USR000006',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP
-   ),
-   (
-      'USR000007',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP
-   ),
+   ('USR000006', 2,),
+   ('USR000007', 2,),
    -- Usuario con rol histórico
-   (
-      'USR000008',
-      1,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   ),
-   (
-      'USR000009',
-      2,
-      CURRENT_TIMESTAMP,
-      CURRENT_TIMESTAMP,
-      NULL
-   );
+   ('USR000008', 1,),
+   ('USR000009', 2,);
 
 ------------------------------------------------------------------------
 CREATE TABLE

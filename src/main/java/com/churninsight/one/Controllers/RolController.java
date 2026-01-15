@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.services.RolService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/roles")
+@Tag(name = "Roles", description = "Endpoints de gestión de roles")
 public class RolController {
 
     @Autowired
@@ -28,11 +31,13 @@ public class RolController {
     //     this.rolService = rolService;
     // }
 
+    @Tag(name = "Listar roles", description = "Obtener lista de todos los roles")
     @GetMapping
     public ResponseEntity<List<Rol>> listarRoles() {
         return ResponseEntity.ok(rolService.listarRoles());
     }
 
+    @Tag(name = "Obtener rol por ID", description = "Obtener un rol por su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Rol> obtenerRolPorId(@PathVariable Long id) {
         return rolService.obtenerRolPorId(id)
@@ -40,6 +45,7 @@ public class RolController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Tag(name = "Crear rol", description = "Crear un nuevo rol")
     @PostMapping
     public ResponseEntity<Rol> crearRol(@RequestBody Rol rol) {
         try {
@@ -50,6 +56,7 @@ public class RolController {
         }
     }
 
+    @Tag(name = "Actualizar rol", description = "Actualizar un rol existente")
     @PutMapping("/{id}")
     public ResponseEntity<Rol> actualizarRol(@PathVariable Long id, @RequestBody Rol rol) {
         try {
@@ -60,6 +67,7 @@ public class RolController {
         }
     }
 
+    @Tag(name = "Eliminar rol", description = "Eliminar un rol por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarRol(@PathVariable Long id) {
         try {

@@ -6,7 +6,7 @@ spring:
     name: CHURNINSIGHT_ONE_BK_J17
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/churninsight
+    url: jdbc:postgresql://localhost:5432/churninsight_db
     username: postgres
     password: 246800
     driver-class-name: org.postgresql.Driver
@@ -19,6 +19,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+security:
+  jwt:
+    key:
+      private: mySecretKeyForJWTTokenGenerationThatIsVeryLongAndSecure12345
+      public: myPublicKeyForJWTTokenValidation
+    user:
+      generator: churninsight-api
+    time:
+      expiration: 86400000
 
 #   sql:
 #     init:

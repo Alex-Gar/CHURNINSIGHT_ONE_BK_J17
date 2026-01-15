@@ -39,7 +39,7 @@ public class Rol {
 
     private String descripcion;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
     @JsonIgnoreProperties("roles")
     private Set<Permiso> permisos = new HashSet<>();

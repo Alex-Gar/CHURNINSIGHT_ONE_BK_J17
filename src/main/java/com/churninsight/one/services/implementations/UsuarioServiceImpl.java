@@ -12,6 +12,7 @@ import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.exceptions.ResourceNotFoundException;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.entities.usuario.UsuarioDto;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -21,6 +22,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private com.churninsight.one.models.repositories.RolRepository rolRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     @Override
@@ -53,12 +60,17 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoUsuario.setPApellido(usuarioDto.pApellido());
             nuevoUsuario.setSApellido(usuarioDto.sApellido());
             nuevoUsuario.setEmail(usuarioDto.email());
-            nuevoUsuario.setPassword(usuarioDto.password());
+            nuevoUsuario.setPassword(passwordEncoder.encode(usuarioDto.password()));
             nuevoUsuario.setTelefono(usuarioDto.telefono());
             nuevoUsuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
             nuevoUsuario.setGenero(usuarioDto.genero());
             nuevoUsuario.setTieneConyuge(usuarioDto.tieneConyuge());
             nuevoUsuario.setTieneDependientes(usuarioDto.tieneDependientes());
+
+            // Asignar rol USUARIO por defecto
+            Rol rolUsuario = rolRepository.findByNombre("USUARIO")
+                    .orElseThrow(() -> new ResourceNotFoundException("Rol USUARIO no encontrado en la base de datos"));
+            nuevoUsuario.setRoles(java.util.List.of(rolUsuario));
 
             Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
             System.out.println("ID: " + nuevoUsuario.getId());
@@ -129,7 +141,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         return resultado;
     }
 
-
     @Override
     public Page<Usuario> listarUsuariosEliminados(Integer pagina, Integer tamanio) {
         Pageable pageable = PageRequest.of(pagina, tamanio);
@@ -150,4 +161,39 @@ public class UsuarioServiceImpl implements UsuarioService {
         return response;
     }
 
+    @Transactional
+    @Override
+    public ApiResponse asignarRol(String usuarioId, Long rolId) {
+        Usuario usuario = this.usuarioRepository.findActiveById(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("usuario", "id", usuarioId));
+
+        Rol rol = rolRepository.findById(rolId)
+                .orElseThrow(() -> new ResourceNotFoundException("rol", "id", rolId));
+
+        if (!usuario.getRoles().contains(rol)) {
+            usuario.getRoles().add(rol);
+            usuarioRepository.save(usuario);
+            return new ApiResponse("Rol asignado con éxito", true, null);
+        } else {
+            return new ApiResponse("El usuario ya tiene este rol", false, null);
+        }
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse removerRol(String usuarioId, Long rolId) {
+        Usuario usuario = this.usuarioRepository.findActiveById(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("usuario", "id", usuarioId));
+
+        Rol rol = rolRepository.findById(rolId)
+                .orElseThrow(() -> new ResourceNotFoundException("rol", "id", rolId));
+
+        if (usuario.getRoles().contains(rol)) {
+            usuario.getRoles().remove(rol);
+            usuarioRepository.save(usuario);
+            return new ApiResponse("Rol removido con éxito", true, null);
+        } else {
+            return new ApiResponse("El usuario no tiene este rol asignado", false, null);
+        }
+    }
 }
