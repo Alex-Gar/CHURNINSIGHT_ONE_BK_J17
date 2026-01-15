@@ -1,255 +1,153 @@
-ChurnInsight – Guía de Configuración Inicial
+# CHURNINSIGHT_ONE_BK_J17
+
+ChurnInsight es un backend desarrollado en Java con Spring Boot para predecir la probabilidad de **cancelación de clientes (churn)** en servicios con suscripción (Telecom, Fintech, Streaming, e-Commerce, etc.). Utiliza un modelo predictivo de ciencia de datos para identificar clientes con alta probabilidad de desistir y así habilitar acciones de retención.
+
+---
+
+## 📌 Objetivo
+
+Este proyecto proporciona una API REST que:
+
+- Recibe información de clientes (Front-end).
+- Consume el servicio la API del modelo, para enviarle infromación acerca de los clientes a analizar 
+- Recibe predicciones de churn (sí/no).
+- Mantiene un historial de predicciones, siendo persistido en la base de datos para futuras consultas.
+- Permite analizar la evolución de riesgo de cada cliente a lo largo del tiempo, asi como lanzar ofertes para retener al cliente.
+
+---
+
+## 🧱 Estructura General
+
+El proyecto está dividido en tres grandes áreas:
+
+## 🗄 Front-end
+- Consume los endpoints del backend para:
+- Enviar información de clientes.
+- Visualizar predicciones e historial.
+- Gestionar usuarios y seguridad.
+
+### 🧠 Data Science
+
+Contiene scripts/notebooks para:
+
+- Exploración y limpieza de datos (EDA).
+- Ingeniería de características.
+- Entrenamiento de modelos.
+- Serialización del modelo para uso en producción.
+
+### 🛠 Back-End (Spring Boot)
+
+Provee:
+
+- API REST desarrollada con Spring Boot.
+- Persistencia con PostgreSQL y Spring Data JPA.
+- Seguridad con Spring Security y JWT.
+- Auditoría y borrado lógico.
+- Manejo de relaciones entre entidades:
+- Usuario
+- Predicción
+- Historial
+- Roles y Permisos
+---
+
+## 🗄 Base de Datos
+
+Se usa **PostgreSQL** para almacenar:
+
+- Clientes (usuarios).
+- Predicciones actuales.
+- Historial de predicciones (evolución en el tiempo).
+- Relaciones entre predicciones e historial.
+- Ofertas 
+- Permisos, Roles e usuaarios
+- Planes 
+- Servicios
+
+Ejemplo de tablas principales:
+
+- `usuarios`
+- `predicciones`
+- `historial_predicciones`
+- `predicciones_historial`
+- `roles` 
+- `permisos` 
+- `roles_permisos` 
+- `roles_usuarios` 
+![alt text](<Captura de pantalla_20260113_210055-1.png>)
+---
+
+## 🚀 Características
+
+### 📍 Endpoints de API
+
+Swagger 
+- `GET /swagger-ui/index.html#/` → Documentación de las Api's del sistema 
+- `GET /v3/api-docs` → Documentación de las Api's del sistema
+Auth 
+- `POST /auth/register` → Registra usuarios.
+{
+  "id": "string",
+  "nombre": "string",
+  "pApellido": "string",
+  "sApellido": "string",
+  "email": "string",
+  "password": "stringst",
+  "telefono": "5316049943",
+  "fechaNacimiento": "2026-01-14T02:38:47.811Z",
+  "genero": "MASCULINO",
+  "tieneConyuge": true,
+  "tieneDependientes": true,
+  "isEnabled": true,
+  "accountNoExpired": true,
+  "accountNoLocked": true,
+  "credentialNoExpired": true,
+  "createdAt": "2026-01-14T02:38:47.811Z",
+  "updatedAt": "2026-01-14T02:38:47.811Z",
+  "deletedAt": "2026-01-14T02:38:47.811Z"
+}
+- `POST /auth/login` → Logeo de usuarios.
+{
+  "email": "string",
+  "password": "string"
+}
+
+
+## Importante loggearse con las credenciales para probar las demas apis
+
+*(Ejemplos basados en estructura estándar de Spring Boot)*
+
+---
+
+## 📦 Tecnologías Back-end
+
+| Capa | Tecnologías |
+|------|-------------|
+| Backend | Java, Spring Boot, Spring Data JPA, Spring Security, JWT, Swaggerm Spring Auditoring, Swagger / OpenAPI|
+| DB | PostgreSQL |
+| API | REST |
+| Control de versiones | Git, Git Flow, GitHub |
+| Prueba de API's | Apidog, Postman, Insomnia
+
+---
+
+## 📁 Estructura de Carpetas
+
+src/
+├── main/
+│ ├── java/
+│ │ ├── controller/
+| | ├── config
+| | ├── exceptions
+│ │ ├── service/
+| | |         └──imprementations
+| | ├── security
+│ │ ├── models/
+| | |         ├──entities
+| | |         ├──payload
+| | |         └──repositories
+| | └── utils
+│ └── resources/
+│ ├── application.yml
+│ └── other config files
+├── test/
 
-Este documento describe los pasos necesarios para configurar correctamente el proyecto ChurnInsight en un entorno de desarrollo local y las reglas básicas de trabajo en equipo.
-
-🧱 1. Configuración inicial del proyecto
-
-El proyecto ya fue configurado con:
-
-Librerías necesarias para el desarrollo Back-end
-
-Estructura de carpetas base
-
-Configuración inicial para conexión a base de datos (omitir los archivos Prueba)
-
-Antes de ejecutar el proyecto, es obligatorio completar la configuración descrita a continuación.
-
-🐘 2. Configuración de la base de datos PostgreSQL
-2.1 Archivo de configuración
-
-En el archivo de configuración:
-
-application.yml
-
-Configurar los siguientes valores:
-
-spring:
-  datasource:
-    username: postgres
-    password: "tu password"
-    url: jdbc:postgresql://localhost:5432/churninsight_db
-
-2.2 Creación de la base de datos
-
-Es necesario crear previamente la base de datos en PostgreSQL:
-
-CREATE DATABASE churninsight_db;
-
-
-📌 Nota:
-Si la base de datos no existe o las credenciales son incorrectas, el proyecto fallará al iniciar.
-
-🌱 3. Flujo de trabajo con Git (Git Flow)
-
-El proyecto utiliza Git Flow como estrategia de control de versiones.
-
-Reglas importantes:
-
-❌ Nunca realizar commits directamente en la rama master
-
-✅ Todo el desarrollo debe realizarse en la rama develop
-
-🌿 Nuevas funcionalidades deben partir desde develop
-
-Ejemplo de flujo correcto:
-
-master
- └── develop
-      └── feature/nombre-funcionalidad
-
-
-Esto garantiza:
-
-Estabilidad en master
-
-Integración ordenada de nuevas funcionalidades
-
-Mejor control de cambios en equipo
-
-🔐 4. Archivos de configuración y buenas prácticas
-
-⚠️ Importante
-
-Los archivos de configuración NO deben subirse al repositorio, ya que contienen información sensible (credenciales, URLs, etc.).
-
-Asegúrate de que los siguientes archivos estén ignorados por Git:
-
-application.yml
-application.properties
-
-
-Verifica que estén incluidos en el archivo .gitignore.
-
-🛠️ 5. Configuración de Git y VS Code
-
-Antes de subir cambios al repositorio:
-
-Revisa que tus configuraciones locales no se incluyan en el commit
-
-Usa correctamente el .gitignore
-
-Verifica los archivos a subir con:
-
-git status
-
-
-Esto evita subir:
-
-Credenciales
-Configuraciones locales
-
-
-🚀 Listo para comenzar
-
-![alt text](DB.png)
-Proyecto que se Busca alcanzar dividido en etapas
-
-<em> Retos del Equipo y Lineamientos de Desarrollo </em>
-
-Esta sección describe los principales retos técnicos y las reglas de trabajo colaborativo que deberán seguir todos los integrantes del equipo durante el desarrollo del proyecto ChurnInsight.
-
-🗄️ Modelado de Datos y Relaciones (JPA)
-
-Diseñar y crear correctamente las relaciones entre tablas utilizando anotaciones de JPA:
-
-@OneToMany
-
-@ManyToOne
-
-@ManyToMany
-
-Garantizar una correcta representación del modelo de dominio y la integridad de los datos en la base de datos.
-
-🗑️ Borrado Lógico (Soft Delete)
-
-Implementar un borrado lógico, evitando la eliminación física de registros en la base de datos.
-
-Se deberá utilizar el siguiente campo para marcar un registro como eliminado:
-
-deleted_at TIMESTAMP NULL
-
-
-Cuando un registro sea eliminado lógicamente:
-
-El campo deleted_at deberá almacenar la fecha y hora de la eliminación.
-
-Todas las consultas SELECT deberán:
-
-Retornar únicamente los registros donde deleted_at sea NULL.
-
-Excluir automáticamente los registros marcados como eliminados.
-
-El borrado lógico deberá integrarse con Spring Data Auditing para mantener trazabilidad e historial de cambios.
-
-🔐 Seguridad de la Aplicación
-
-Implementar Spring Security con JWT (JSON Web Tokens) para:
-
-Autenticación de usuarios
-
-Autorización de accesos
-
-Protección de endpoints según roles y permisos
-
-🌱 Flujo de Trabajo con Git Flow
-
-El proyecto utiliza Git Flow como estrategia oficial de control de versiones.
-
-Reglas obligatorias:
-
-❌ No se permite realizar commits directamente en la rama master.
-
-✅ Todo el desarrollo debe realizarse a partir de la rama develop.
-
-Flujo recomendado por funcionalidad:
-
-Crear una nueva rama feature para cada tarea:
-
-git flow feature start CRUD_Usuario
-
-
-Realizar todos los commits relacionados con la tarea únicamente en la rama feature.
-
-Una vez que la funcionalidad:
-
-Esté completamente implementada
-
-Funcione correctamente
-
-Haya sido validada
-
-Se deberá cerrar la feature:
-
-git flow feature finish CRUD_Usuario
-
-
-Este proceso:
-
-Cerrará la rama feature
-
-Fusionará automáticamente los cambios en la rama develop
-
-Subir los cambios al repositorio remoto:
-
-git push origin develop
-
-
-Esto permitirá que todo el equipo tenga acceso a los avances más recientes del proyecto.
-
-✅ Buenas Prácticas Esperadas
-
-Commits claros, pequeños y descriptivos
-
-Código funcional antes de cerrar una feature
-
-Uso correcto de Git Flow
-
-Respeto a las convenciones del proyecto
-
-Comunicación constante con el equipo
-
-![alt text](DB.png)
-
-
-**Tablas verdes importantes para el funcionamiento del sistema
--usuaio
---Apis obligatorias a desarrollar
----CREAR USUARIO
----lISTAR USUARIOS ACTIVOS usando PAGE(paginador)
----BUSCAR POR ID ACTIVOS
----ACTUALIZAR USARIOS ACTIVOS
----ELIMINAR USUARIOS ACTIVOS
----LISTAR USUARIOS ELIMINADOS 
-
--Predicion
---Apis obligatorias a desarrollar
---- LISTAR PREDICIONES 
---- BUSACAR PREDICION POR ID
---- ACTUALIZAR PREDICION POR ID (Esta tabla debera actualizar su información cuando se reciba una nueva predicion del usuario)
-
--wv_input
----LISTAR VW_INPUT 
----BUSCAR POR ID (ID_CLIENTE)
-
-**Tablas naranga no importantes solo para la imprementación de Spring Security para el funcionamiento del sistema
---Permisos
----CRUD COMPRETO
---Roles permisos
-------CRUD COMPRETO
-
-Se deben usar relaciones JPA @MANYTOMANY O @MANYTOONE
-Con el objetivo de que cuando se liste la tabla permisos traiga tambien las relaciones con roles, cuando se listen roles traiga tambien los permisos registrados a cada rol
-
-**Tablas rojas necesarias para que el sistema funciones no necesesarias para programar (en caso de dar tiempo si las programaremos) con registros en la base de datos fucncion y muestra la información que contiene desde la vista
-
---Ofertas
----CRUD
---plannes
----CRUD
---servicios
----CRUD
-
-
-***Pueden ver como esta cosntruida la rama feature/Usuario_Single_Responsibility para guiarse y usar las estructura de carpetas correctamente uso y imprementación de DTO´S generador de ID tipo cadena manejador de excepciones y borrado logico lo pueden hacer con anotaciones en la entidad o funciones JPQL en el repositorio
---El codigo no es necesario que sea el mismo que feature/Usuario_Single_Responsibility  solo se busca que cumpra el objetivo cada uno programa a su modo  es valido y asi se integrara el codigo 
-es importante hacer uso correcto de la arquitectura(carpetas clases e interfaces asi como manejador de excepciones y respuestas)
