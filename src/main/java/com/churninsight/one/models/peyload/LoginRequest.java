@@ -1,4 +1,4 @@
-package com.churninsight.one.models.payload;
+package com.churninsight.one.models.peyload;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

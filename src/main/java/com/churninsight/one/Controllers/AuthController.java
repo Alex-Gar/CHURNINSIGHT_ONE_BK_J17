@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.churninsight.one.models.payload.LoginRequest;
 import com.churninsight.one.models.peyload.ApiResponse;
+import com.churninsight.one.models.peyload.LoginRequest;
 import com.churninsight.one.security.JwtUtils;
 import com.churninsight.one.services.UsuarioService;
 
@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Tag(name = "Autenticación", description = "Endpoints de autenticación y registro")
 public class AuthController {
 
@@ -43,6 +43,7 @@ public class AuthController {
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
+            
             String token = jwtUtils.crearToken(authentication);
 
             return ResponseEntity.ok(new ApiResponse("Login exitoso", true, token));
