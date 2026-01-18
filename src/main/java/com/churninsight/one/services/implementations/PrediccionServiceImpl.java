@@ -1,20 +1,19 @@
 package com.churninsight.one.services.implementations;
 
-import com.churninsight.one.models.dto.prediccion.PrediccionDSResponse;
-import com.churninsight.one.models.entities.prediccion.Prediccion;
-import com.churninsight.one.models.repositories.PrediccionRepository;
-import com.churninsight.one.services.PrediccionService;
-import jakarta.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.churninsight.one.models.dto.prediccion.PrediccionDSResponse;
+import com.churninsight.one.models.entities.prediccion.Prediccion;
+import com.churninsight.one.models.repositories.PrediccionRepository;
+import com.churninsight.one.services.PrediccionService;
 
 @Service
 public class PrediccionServiceImpl implements PrediccionService {
@@ -22,19 +21,22 @@ public class PrediccionServiceImpl implements PrediccionService {
     private final PrediccionRepository prediccionRepository;
     private final RestTemplate restTemplate;
 
-    //URL del servicio de Data Science
-    @Value("${datascience.mock.url}")
-    private String dataScienceUrl;
+    // URL del servicio de Data Science
+    // @Value("${datascience.mock.url}")
+    // private String dataScienceUrl;
 
+    @Value("${datascience.mock.url:http://localhost:8000/mock}")
+    private String dataScienceUrl;
 
     public PrediccionServiceImpl(PrediccionRepository prediccionRepository, RestTemplate restTemplate) {
         this.prediccionRepository = prediccionRepository;
         this.restTemplate = restTemplate;
     }
-    @Override
-    public Prediccion evaluarPrediccion(String idUsuario, Object requestDS){
 
-        //1. Consumir API de Data Science (mock)
+    @Override
+    public Prediccion evaluarPrediccion(String idUsuario, Object requestDS) {
+
+        // 1. Consumir API de Data Science (mock)
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -43,16 +45,15 @@ public class PrediccionServiceImpl implements PrediccionService {
         PrediccionDSResponse response = restTemplate.postForObject(
                 dataScienceUrl,
                 entity,
-                PrediccionDSResponse.class
-        );
-        if(response == null){
+                PrediccionDSResponse.class);
+        if (response == null) {
             throw new RuntimeException("Respuesta nula del servicio de predicción");
         }
 
-        //Soft delete de predicciones previas del usuario
+        // Soft delete de predicciones previas del usuario
         eliminarLogicoPorUsuario(idUsuario);
 
-        //3. Crear nueva predicción
+        // 3. Crear nueva predicción
         Prediccion prediccion = new Prediccion();
         prediccion.setIdUsuario(idUsuario);
         prediccion.setChurn(response.churn());
@@ -67,32 +68,32 @@ public class PrediccionServiceImpl implements PrediccionService {
 
     }
 
-    //2. Eliminar lógico (Soft Delete)
+    // 2. Eliminar lógico (Soft Delete)
     @Override
     public void eliminarLogicoPorUsuario(String idUsuario) {
-        List<Prediccion> activas=
-                prediccionRepository.findByIdUsuarioAndDeletedAtIsNull(idUsuario);
+        List<Prediccion> activas = prediccionRepository.findByIdUsuarioAndDeletedAtIsNull(idUsuario);
 
-        for(Prediccion p : activas){
+        for (Prediccion p : activas) {
             p.setDeletedAt(LocalDateTime.now());
             p.setUpdatedAt(LocalDateTime.now());
         }
         prediccionRepository.saveAll(activas);
     }
-    //3. Listar todas las activas en el sistema
+
+    // 3. Listar todas las activas en el sistema
     @Override
     public List<Prediccion> listarActivas() {
         return prediccionRepository.findAllByDeletedAtIsNull();
     }
 
-    //4. Métodos para Estadísticas usando los @Query del Repository
+    // 4. Métodos para Estadísticas usando los @Query del Repository
     @Override
-    public Long obtenerTotalEvaluados(){
+    public Long obtenerTotalEvaluados() {
         return prediccionRepository.totalEvaluados();
     }
 
     @Override
-    public Long obtenerTotalChurn(){
+    public Long obtenerTotalChurn() {
         return prediccionRepository.totalChurn();
     }
 
@@ -102,4 +103,3 @@ public class PrediccionServiceImpl implements PrediccionService {
     }
 
 }
-

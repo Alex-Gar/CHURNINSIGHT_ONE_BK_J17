@@ -33,13 +33,8 @@ public class PrediccionController {
 
         // 1. POST -> evaluar predicción( consume DS + guarda)
         @PostMapping("/evaluar")
-        public ResponseEntity<PrediccionResponse> evaluar(
-                        @RequestBody PrediccionRequest request) {
-                Prediccion prediccion = prediccionService.evaluarPrediccion(
-                                request.idUsuario(),
-                                request
-
-                );
+        public ResponseEntity<PrediccionResponse> evaluar(@RequestBody PrediccionRequest request) {
+                Prediccion prediccion = prediccionService.evaluarPrediccion(request.idUsuario(), request);
                 return ResponseEntity.ok(
                                 new PrediccionResponse(
                                                 prediccion.getId(),
@@ -47,9 +42,7 @@ public class PrediccionController {
                                                 prediccion.getChurn(),
                                                 prediccion.getPrevision(),
                                                 prediccion.getProbabilidad(),
-                                                prediccion.getCreatedAt()
-
-                                ));
+                                                prediccion.getCreatedAt()));
         }
 
         // 2. GET -> Listar predicciones activas por usuario

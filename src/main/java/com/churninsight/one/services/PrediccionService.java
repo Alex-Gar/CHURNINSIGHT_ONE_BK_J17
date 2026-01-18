@@ -1,9 +1,8 @@
 package com.churninsight.one.services;
 
-import com.churninsight.one.models.entities.prediccion.Prediccion;
-
-import java.util.Arrays;
 import java.util.List;
+
+import com.churninsight.one.models.entities.prediccion.Prediccion;
 
 public interface PrediccionService {
 

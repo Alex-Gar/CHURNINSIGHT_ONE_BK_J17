@@ -15,7 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "prediccion")
+@Table(name = "predicciones")
 @EntityListeners(AuditingEntityListener.class)
 public class Prediccion {
 
@@ -23,7 +23,7 @@ public class Prediccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_usuario", nullable = false)
+    @Column(name = "usuario_id", nullable = false)
     private String idUsuario;
 
     @Column(name = "churn")
