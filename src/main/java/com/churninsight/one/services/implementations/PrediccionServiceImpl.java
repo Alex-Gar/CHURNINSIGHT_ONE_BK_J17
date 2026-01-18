@@ -25,7 +25,7 @@ public class PrediccionServiceImpl implements PrediccionService {
     // @Value("${datascience.mock.url}")
     // private String dataScienceUrl;
 
-    @Value("${datascience.mock.url:http://localhost:8000/mock}")
+    @Value("${datascience.mock.url:http://163.192.138.89:8086/api/churn/predict}")
     private String dataScienceUrl;
 
     public PrediccionServiceImpl(PrediccionRepository prediccionRepository, RestTemplate restTemplate) {

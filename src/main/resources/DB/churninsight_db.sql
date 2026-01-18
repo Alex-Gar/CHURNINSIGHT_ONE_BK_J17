@@ -432,11 +432,12 @@ CREATE TABLE
    IF NOT EXISTS planes (
       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       servicio_telefono BOOLEAN NOT NULL,
-      servicio_internet BOOLEAN NOT NULL,
+      servicio_internet VARCHAR(20) NOT NULL,
       seguridad_en_linea BOOLEAN NOT NULL,
       respaldo_en_linea BOOLEAN NOT NULL,
       proteccion_dispositivo BOOLEAN NOT NULL,
       soporte_tecnico BOOLEAN NOT NULL,
+	  lineas_multiples BOOLEAN NOT NULL,
       streaming_tv BOOLEAN NOT NULL,
       streaming_peliculas BOOLEAN NOT NULL,
       cargo_mensual DECIMAL NOT NULL,
@@ -453,6 +454,7 @@ INSERT INTO
       respaldo_en_linea,
       proteccion_dispositivo,
       soporte_tecnico,
+	  lineas_multiples,
       streaming_tv,
       streaming_peliculas,
       cargo_mensual,
@@ -464,11 +466,12 @@ VALUES
    -- Plan Básico Internet
    (
       false,
-      true,
+      "Cable Coaxial",
       false,
       false,
       false,
       false,
+	  false,
       false,
       false,
       399.00,
@@ -479,11 +482,12 @@ VALUES
    -- Plan Telefonía Básica
    (
       true,
+      "Cable Coaxial",
       false,
       false,
       false,
       false,
-      false,
+	  false,
       false,
       false,
       299.00,
@@ -494,11 +498,12 @@ VALUES
    -- Plan Dúo Internet + Teléfono
    (
       true,
-      true,
+      "Cable Coaxial",
       false,
       false,
       false,
       true,
+	  true,
       false,
       false,
       549.00,
@@ -509,10 +514,11 @@ VALUES
    -- Plan Streaming
    (
       false,
-      true,
+      "Fibra Óptica",
       false,
       false,
       false,
+	  true,
       false,
       true,
       true,
@@ -524,11 +530,12 @@ VALUES
    -- plan Premium
    (
       true,
+      "Fibra Óptica",
       true,
       true,
       true,
       true,
-      true,
+	  true,
       true,
       true,
       899.00,
@@ -539,11 +546,12 @@ VALUES
    -- Plan Familiar
    (
       true,
-      true,
+      "Fibra Óptica",
       false,
       true,
       true,
       true,
+	  true,
       true,
       false,
       749.00,
@@ -554,10 +562,11 @@ VALUES
    -- Plan Empresarial
    (
       true,
+      "Fibra Óptica",
       true,
       true,
       true,
-      true,
+	  true,
       true,
       false,
       false,
@@ -569,11 +578,12 @@ VALUES
    -- Plan Económico (dado de baja)
    (
       false,
-      true,
+	  "Fibra Óptica",
       false,
       false,
       false,
       false,
+	  false,
       false,
       false,
       249.00,
@@ -584,11 +594,12 @@ VALUES
    -- Plan Antiguo (soft delete)
    (
       true,
-      true,
+      "Fibra Óptica",
       false,
       false,
       false,
       false,
+	  false,
       false,
       false,
       459.00,
@@ -599,11 +610,12 @@ VALUES
    -- Plan Promocional
    (
       true,
-      true,
+      "Fibra Óptica",
       false,
       true,
       false,
       false,
+	  false,
       false,
       false,
       399.00,
@@ -622,6 +634,7 @@ CREATE TABLE
       facturacion_electronica BOOLEAN NOT NULL,
       tipo_contrato VARCHAR(30) NOT NULL,
       subscripcion_activa BOOLEAN NOT NULL,
+	  metodo_pago VARCHAR(30) NOT NULL,
       created_at TIMESTAMP NOT NULL,
       updated_at TIMESTAMP NOT NULL,
       deleted_at TIMESTAMP NULL,
@@ -637,6 +650,7 @@ INSERT INTO
       facturacion_electronica,
       tipo_contrato,
       subscripcion_activa,
+	  created_at
       created_at,
       updated_at,
       deleted_at
@@ -650,6 +664,7 @@ VALUES
       true,
       'Month-to-month',
       true,
+	  'E-wallet',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -662,6 +677,7 @@ VALUES
       false,
       'One year',
       true,
+	  'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -674,6 +690,7 @@ VALUES
       true,
       'Two year',
       true,
+	  'Crédito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -686,6 +703,7 @@ VALUES
       false,
       'Month-to-month',
       true,
+	  'Pagos QR',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -698,6 +716,7 @@ VALUES
       true,
       'One year',
       true,
+	  'Pagos QR',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -710,6 +729,7 @@ VALUES
       false,
       'Month-to-month',
       false,
+	  'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -722,6 +742,7 @@ VALUES
       true,
       'One year',
       false,
+	  'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP
@@ -734,6 +755,7 @@ VALUES
       true,
       'Two year',
       true,
+	  'E-wallet',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -746,6 +768,7 @@ VALUES
       false,
       'Month-to-month',
       true,
+	  'Tarjeta Prepago',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -758,12 +781,14 @@ VALUES
       true,
       'Month-to-month',
       false,
+	  'Tarjeta Prepago',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP
    );
 
 -------------------------------------------------------------------------
+
 CREATE TABLE
    IF NOT EXISTS predicciones (
       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -1113,6 +1138,8 @@ VALUES
    );
 
 --------------------------------------------
+
+--------------------------------------------
 CREATE
 OR REPLACE VIEW vw_servicios_usuarios AS
 SELECT
@@ -1175,28 +1202,65 @@ WHERE
    u.deleted_at IS NULL
    AND s.deleted_at IS NULL
    AND p.deleted_at IS NULL;
-
+--------------------------------------------
+CREATE
+OR REPLACE VIEW vw_input_modelo AS
 SELECT
-   *
+   u.id AS id_cliente,
+   u.genero,
+   CASE
+      WHEN EXTRACT(
+         YEAR
+         FROM
+            AGE (CURRENT_DATE, u.fecha_nacimiento)
+      ) >= 60 THEN 1
+      ELSE 0
+   END AS adulto_mayor,
+   u.tiene_conyuge AS tiene_pareja,
+   u.tiene_dependientes,
+   EXTRACT(
+      YEAR
+      FROM
+         AGE (CURRENT_DATE, u.created_at)
+   ) * 12 + EXTRACT(
+      MONTH
+      FROM
+         AGE (CURRENT_DATE, u.created_at)
+   ) AS antiguedad_meses,
+   p.servicio_telefono,
+   p.servicio_internet,
+   p.seguridad_en_linea,
+   p.respaldo_en_linea,
+   p.proteccion_dispositivo,
+   p.soporte_tecnico,
+   p.streaming_tv,
+   p.streaming_peliculas,
+   s.tipo_contrato,
+   s.facturacion_electronica,
+   s.metodo_pago,
+   p.cargo_mensual,
+   (
+      p.cargo_mensual * (
+         EXTRACT(
+            YEAR
+            FROM
+               AGE (CURRENT_DATE, u.created_at)
+         ) * 12 + EXTRACT(
+            MONTH
+            FROM
+               AGE (CURRENT_DATE, u.created_at)
+         )
+      )
+   ) AS cargos_totales,
+   
+ 
 FROM
-   vw_servicios_usuarios;
-
-select
-   *
-from
-   roles_permisos;
-
-select
-   *
-from
-   historialPrediccion;
-
-select
-   *
-from
-   predicciones;
-
-select
-   *
-from
-   usuarios;
+   usuarios u
+   JOIN servicios s ON u.id = s.id_usuario
+   JOIN planes p ON s.id_plan = p.id
+WHERE
+   u.deleted_at IS NULL
+   AND s.deleted_at IS NULL
+   AND p.deleted_at IS NULL;
+   
+   SELECT * FROM planes;
