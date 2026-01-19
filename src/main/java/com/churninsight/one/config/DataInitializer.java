@@ -47,11 +47,9 @@ public class DataInitializer {
                 System.out.println("Admin user created: admin@churninsight.com / admin123");
                 System.out.println("---------------------------------------------");
             } else if (adminOptional.isPresent()) {
-                // Update admin password if it's empty or invalid
                 Usuario admin = adminOptional.get();
                 String currentPassword = admin.getPassword();
 
-                // Check if password is empty or doesn't look like a BCrypt hash
                 if (currentPassword == null || currentPassword.trim().isEmpty()
                         || !currentPassword.startsWith("$2a$")) {
                     admin.setPassword(passwordEncoder.encode("admin123"));
