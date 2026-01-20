@@ -1,30 +1,35 @@
 package com.churninsight.one.models.repositories;
 
-import com.churninsight.one.models.entities.prediccion.Prediccion;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
+import com.churninsight.one.models.entities.prediccion.Prediccion;
 
 public interface PrediccionRepository extends JpaRepository<Prediccion, Long> {
 
-    // Predicciones activas por usuario
-    List<Prediccion> findByIdUsuarioAndDeletedAtIsNull(String idUsuario);
+        @Query("""
+                        SELECT u FROM Prediccion u
+                        WHERE u.deletedAt IS NULL AND u.idUsuario = :id
+                        """)
+        Optional<Prediccion> findActiveByIdUsuario(@Param("id") String id);
 
-    // Todas las predicciones activas
-    List<Prediccion> findAllByDeletedAtIsNull();
+        // Todas las predicciones activas
+        List<Prediccion> findAllByDeletedAtIsNull();
 
-    @Query("""
-            SELECT COUNT(p) FROM Prediccion p
-            WHERE p.deletedAt IS NULL
-            """)
-    Long totalEvaluados();
+        @Query("""
+                        SELECT COUNT(p) FROM Prediccion p
+                        WHERE p.deletedAt IS NULL
+                        """)
+        Long totalEvaluados();
 
-    @Query("""
-            SELECT COUNT(p) FROM Prediccion p
-            WHERE p.deletedAt IS NULL AND p.churn = true
-            """)
-    Long totalChurn();
+        @Query("""
+                        SELECT COUNT(p) FROM Prediccion p
+                        WHERE p.deletedAt IS NULL AND p.churn = true
+                        """)
+        Long totalChurn();
 
 }

@@ -1,4 +1,4 @@
-package com.churninsight.one.models.entities.vwserviciosusuario;
+package com.churninsight.one.models.entities.vistas;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

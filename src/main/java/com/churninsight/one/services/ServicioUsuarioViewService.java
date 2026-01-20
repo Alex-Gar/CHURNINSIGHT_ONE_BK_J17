@@ -2,7 +2,7 @@ package com.churninsight.one.services;
 
 import org.springframework.data.domain.Page;
 
-import com.churninsight.one.models.entities.vwserviciosusuario.ServicioUsuarioView;
+import com.churninsight.one.models.entities.vistas.ServicioUsuarioView;
 
 public interface ServicioUsuarioViewService {
 

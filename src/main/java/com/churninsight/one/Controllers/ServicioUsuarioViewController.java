@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.churninsight.one.models.entities.vwserviciosusuario.ServicioUsuarioView;
+import com.churninsight.one.models.entities.vistas.ServicioUsuarioView;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.services.ServicioUsuarioViewService;
 

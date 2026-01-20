@@ -1,22 +1,22 @@
-SELECT
-   pid,
-   usename,
-   application_name
-FROM
-   pg_stat_activity
-WHERE
-   datname = 'churninsight_db';
+-- SELECT
+--   pid,
+--   usename,
+--   application_name
+--FROM
+--   pg_stat_activity
+--WHERE
+--   datname = 'churninsight_db';
 
-SELECT
-   pg_terminate_backend (pid)
-FROM
-   pg_stat_activity
-WHERE
-   datname = 'churninsight_db';
+--SELECT
+--   pg_terminate_backend (pid)
+--FROM
+--   pg_stat_activity
+--WHERE
+--   datname = 'churninsight_db';
 
-DROP SCHEMA public CASCADE;
+--DROP SCHEMA public CASCADE;
 
-CREATE SCHEMA public;
+--CREATE SCHEMA public;
 
 -- DROP DATABASE churninsight_db;
 -- CREATE DATABASE churninsight_db;
@@ -403,29 +403,28 @@ CREATE TABLE
    usuarios_roles (
       usuario_id VARCHAR(10) NOT NULL,
       rol_id BIGINT NOT NULL,
-      FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
-      FOREIGN KEY (rol_id) REFERENCES roles (id) PRIMARY KEY (usuario_id, rol_id),
+      PRIMARY KEY (usuario_id, rol_id),
       CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
-      CONSTRAINT fk_rol FOREIGN KEY (rol_id) REFERENCES roles (id),
+      CONSTRAINT fk_rol FOREIGN KEY (rol_id) REFERENCES roles (id)
    );
 
 INSERT INTO
-   usuarios_roles (usuario_id, rol_id,)
+   usuarios_roles (usuario_id, rol_id)
 VALUES
    -- Usuarios activos
-   ('USR000001', 1,), -- Admin
-   ('USR000002', 2,),
-   ('USR000003', 2,),
-   ('USR000004', 2,),
+   ('USR000001', 1), -- Admin
+   ('USR000002', 2),
+   ('USR000003', 2),
+   ('USR000004', 2),
    -- Usuario con doble rol
-   ('USR000005', 1,),
-   ('USR000005', 2,),
+   ('USR000005', 1),
+   ('USR000005', 2),
    -- Roles dados de baja (soft delete)
-   ('USR000006', 2,),
-   ('USR000007', 2,),
+   ('USR000006', 2),
+   ('USR000007', 2),
    -- Usuario con rol histórico
-   ('USR000008', 1,),
-   ('USR000009', 2,);
+   ('USR000008', 1),
+   ('USR000009', 2);
 
 ------------------------------------------------------------------------
 CREATE TABLE
@@ -437,7 +436,7 @@ CREATE TABLE
       respaldo_en_linea BOOLEAN NOT NULL,
       proteccion_dispositivo BOOLEAN NOT NULL,
       soporte_tecnico BOOLEAN NOT NULL,
-	  lineas_multiples BOOLEAN NOT NULL,
+      lineas_multiples BOOLEAN NOT NULL,
       streaming_tv BOOLEAN NOT NULL,
       streaming_peliculas BOOLEAN NOT NULL,
       cargo_mensual DECIMAL NOT NULL,
@@ -454,7 +453,7 @@ INSERT INTO
       respaldo_en_linea,
       proteccion_dispositivo,
       soporte_tecnico,
-	  lineas_multiples,
+      lineas_multiples,
       streaming_tv,
       streaming_peliculas,
       cargo_mensual,
@@ -471,7 +470,7 @@ VALUES
       false,
       false,
       false,
-	  false,
+      false,
       false,
       false,
       399.00,
@@ -487,7 +486,7 @@ VALUES
       false,
       false,
       false,
-	  false,
+      false,
       false,
       false,
       299.00,
@@ -503,7 +502,7 @@ VALUES
       false,
       false,
       true,
-	  true,
+      true,
       false,
       false,
       549.00,
@@ -518,7 +517,7 @@ VALUES
       false,
       false,
       false,
-	  true,
+      true,
       false,
       true,
       true,
@@ -535,7 +534,7 @@ VALUES
       true,
       true,
       true,
-	  true,
+      true,
       true,
       true,
       899.00,
@@ -551,7 +550,7 @@ VALUES
       true,
       true,
       true,
-	  true,
+      true,
       true,
       false,
       749.00,
@@ -566,7 +565,7 @@ VALUES
       true,
       true,
       true,
-	  true,
+      true,
       true,
       false,
       false,
@@ -578,12 +577,12 @@ VALUES
    -- Plan Económico (dado de baja)
    (
       false,
-	  "Fibra Óptica",
+      "Fibra Óptica",
       false,
       false,
       false,
       false,
-	  false,
+      false,
       false,
       false,
       249.00,
@@ -599,7 +598,7 @@ VALUES
       false,
       false,
       false,
-	  false,
+      false,
       false,
       false,
       459.00,
@@ -615,7 +614,7 @@ VALUES
       true,
       false,
       false,
-	  false,
+      false,
       false,
       false,
       399.00,
@@ -634,7 +633,7 @@ CREATE TABLE
       facturacion_electronica BOOLEAN NOT NULL,
       tipo_contrato VARCHAR(30) NOT NULL,
       subscripcion_activa BOOLEAN NOT NULL,
-	  metodo_pago VARCHAR(30) NOT NULL,
+      metodo_pago VARCHAR(30) NOT NULL,
       created_at TIMESTAMP NOT NULL,
       updated_at TIMESTAMP NOT NULL,
       deleted_at TIMESTAMP NULL,
@@ -650,8 +649,7 @@ INSERT INTO
       facturacion_electronica,
       tipo_contrato,
       subscripcion_activa,
-	  created_at
-      created_at,
+      created_at created_at,
       updated_at,
       deleted_at
    )
@@ -664,7 +662,7 @@ VALUES
       true,
       'Month-to-month',
       true,
-	  'E-wallet',
+      'E-wallet',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -677,7 +675,7 @@ VALUES
       false,
       'One year',
       true,
-	  'Débito',
+      'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -690,7 +688,7 @@ VALUES
       true,
       'Two year',
       true,
-	  'Crédito',
+      'Crédito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -703,7 +701,7 @@ VALUES
       false,
       'Month-to-month',
       true,
-	  'Pagos QR',
+      'Pagos QR',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -716,7 +714,7 @@ VALUES
       true,
       'One year',
       true,
-	  'Pagos QR',
+      'Pagos QR',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -729,7 +727,7 @@ VALUES
       false,
       'Month-to-month',
       false,
-	  'Débito',
+      'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -742,7 +740,7 @@ VALUES
       true,
       'One year',
       false,
-	  'Débito',
+      'Débito',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP
@@ -755,7 +753,7 @@ VALUES
       true,
       'Two year',
       true,
-	  'E-wallet',
+      'E-wallet',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -768,7 +766,7 @@ VALUES
       false,
       'Month-to-month',
       true,
-	  'Tarjeta Prepago',
+      'Tarjeta Prepago',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       NULL
@@ -781,14 +779,13 @@ VALUES
       true,
       'Month-to-month',
       false,
-	  'Tarjeta Prepago',
+      'Tarjeta Prepago',
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP,
       CURRENT_TIMESTAMP
    );
 
 -------------------------------------------------------------------------
-
 CREATE TABLE
    IF NOT EXISTS predicciones (
       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -957,13 +954,11 @@ VALUES
 
 CREATE TABLE
    IF NOT EXISTS relacion_predicciones_historial (
-      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       prediccion_id BIGINT NOT NULL,
       historial_id BIGINT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (prediccion_id, historial_id),
       CONSTRAINT fk_ph_prediccion FOREIGN KEY (prediccion_id) REFERENCES predicciones (id),
       CONSTRAINT fk_ph_historial FOREIGN KEY (historial_id) REFERENCES historial_predicciones (id),
-      CONSTRAINT uq_prediccion_historial UNIQUE (prediccion_id, historial_id)
    );
 
 INSERT INTO
@@ -1138,8 +1133,6 @@ VALUES
    );
 
 --------------------------------------------
-
---------------------------------------------
 CREATE
 OR REPLACE VIEW vw_servicios_usuarios AS
 SELECT
@@ -1202,9 +1195,10 @@ WHERE
    u.deleted_at IS NULL
    AND s.deleted_at IS NULL
    AND p.deleted_at IS NULL;
---------------------------------------------
+
+---------------------------------------------
 CREATE
-OR REPLACE VIEW vw_input_modelo AS
+OR REPLACE VIEW vw_output_modelo AS
 SELECT
    u.id AS id_cliente,
    u.genero,
@@ -1228,6 +1222,7 @@ SELECT
          AGE (CURRENT_DATE, u.created_at)
    ) AS antiguedad_meses,
    p.servicio_telefono,
+   p.lineas_multiples,
    p.servicio_internet,
    p.seguridad_en_linea,
    p.respaldo_en_linea,
@@ -1251,9 +1246,7 @@ SELECT
                AGE (CURRENT_DATE, u.created_at)
          )
       )
-   ) AS cargos_totales,
-   
- 
+   ) AS cargos_totales
 FROM
    usuarios u
    JOIN servicios s ON u.id = s.id_usuario
@@ -1263,4 +1256,11 @@ WHERE
    AND s.deleted_at IS NULL
    AND p.deleted_at IS NULL;
    
-   SELECT * FROM planes;
+ SELECT * FROM usuarios WHERE id = 'USR000010';
+ SELECT * FROM predicciones;
+ SELECT * FROM historial_predicciones;
+ SELECT * FROM vw_output_modelo;
+ SELECT * FROM relacion_predicciones_historial;
+ SELECT * FROM servicios;
+ SELECT * FROM planes;
+
