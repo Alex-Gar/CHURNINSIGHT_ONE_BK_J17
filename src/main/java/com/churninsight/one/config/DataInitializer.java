@@ -24,8 +24,11 @@ public class DataInitializer {
             Rol adminRol = rolRepository.findByNombre("ADMIN").orElse(null);
             Rol userRol = rolRepository.findByNombre("USUARIO").orElse(null);
 
-            // Create Admin User if not exist
-            if (usuarioRepository.findByEmail("admin@churninsight.com").isEmpty() && adminRol != null) {
+            // Create or update Admin User
+            var adminOptional = usuarioRepository.findByEmail("admin@churninsight.com");
+
+            if (adminOptional.isEmpty() && adminRol != null) {
+                // Create new admin user
                 Usuario admin = new Usuario();
                 admin.setNombre("Admin");
                 admin.setPApellido("System");
@@ -43,6 +46,18 @@ public class DataInitializer {
                 System.out.println("---------------------------------------------");
                 System.out.println("Admin user created: admin@churninsight.com / admin123");
                 System.out.println("---------------------------------------------");
+            } else if (adminOptional.isPresent()) {
+                Usuario admin = adminOptional.get();
+                String currentPassword = admin.getPassword();
+
+                if (currentPassword == null || currentPassword.trim().isEmpty()
+                        || !currentPassword.startsWith("$2a$")) {
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    usuarioRepository.save(admin);
+                    System.out.println("---------------------------------------------");
+                    System.out.println("Admin password updated: admin@churninsight.com / admin123");
+                    System.out.println("---------------------------------------------");
+                }
             }
         };
     }

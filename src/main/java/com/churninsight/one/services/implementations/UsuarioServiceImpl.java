@@ -92,7 +92,12 @@ public class UsuarioServiceImpl implements UsuarioService {
                     usuario.setPApellido(usuarioDto.pApellido());
                     usuario.setSApellido(usuarioDto.sApellido());
                     usuario.setEmail(usuarioDto.email());
-                    usuario.setPassword(usuarioDto.password());
+
+                    // Solo actualizar la contraseña si se proporciona una nueva
+                    if (usuarioDto.password() != null && !usuarioDto.password().trim().isEmpty()) {
+                        usuario.setPassword(passwordEncoder.encode(usuarioDto.password()));
+                    }
+
                     usuario.setTelefono(usuarioDto.telefono());
                     usuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
                     usuario.setGenero(usuarioDto.genero());
