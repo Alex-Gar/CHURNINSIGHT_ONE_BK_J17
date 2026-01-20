@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.exceptions.ResourceNotFoundException;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.entities.usuario.UsuarioDto;
-import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.peyload.ApiResponse;
 import com.churninsight.one.models.repositories.UsuarioRepository;
 import com.churninsight.one.services.UsuarioService;
@@ -73,7 +73,6 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoUsuario.setRoles(java.util.List.of(rolUsuario));
 
             Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
-            System.out.println("ID: " + nuevoUsuario.getId());
             ApiResponse response = new ApiResponse("Usuario creado con éxito", true, resultado);
             return response;
         } catch (DataAccessException ex) {
@@ -196,4 +195,5 @@ public class UsuarioServiceImpl implements UsuarioService {
             return new ApiResponse("El usuario no tiene este rol asignado", false, null);
         }
     }
+
 }

@@ -1,22 +1,26 @@
 package com.churninsight.one.security;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 @Component
 public class JwtUtils {
+
+    private static final long ONE_WEEK_MILLISECONDS = 7 * 24 * 60 * 60 * 1000;
 
     @Value("${security.jwt.key.private}")
     private String privateKey;
@@ -24,47 +28,52 @@ public class JwtUtils {
     @Value("${security.jwt.user.generator}")
     private String userGenerator;
 
-    public String crearToken(Authentication authentication) {
+    public String createToken(Authentication authentication) {
         Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
-        User user = (User) authentication.getPrincipal();
 
-        List<String> authorities = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
+        String username = authentication.getPrincipal().toString();
+        String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
 
-        String rolesString = String.join(",", authorities);
-
-        String token = JWT.create()
+        String jwtToken = JWT.create()
                 .withIssuer(this.userGenerator)
-                .withSubject(user.getUsername())
-                .withClaim("authorities", rolesString)
+                .withSubject(username)
+                .withClaim("authorities", authorities)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1800000))
-                .withJWTId(java.util.UUID.randomUUID().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis() + ONE_WEEK_MILLISECONDS)) 
+                .withJWTId(UUID.randomUUID().toString())
                 .withNotBefore(new Date(System.currentTimeMillis()))
                 .sign(algorithm);
 
-        return token;
+        return jwtToken;
+
     }
 
-    public DecodedJWT validarToken(String token) {
+    public DecodedJWT validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(this.userGenerator)
                     .build();
+
             DecodedJWT decodedJWT = verifier.verify(token);
             return decodedJWT;
-        } catch (IllegalArgumentException | JWTVerificationException e) {
-            throw new JWTVerificationException("Token invalido, no autorizado");
+
+        } catch (JWTVerificationException ex) {
+            throw new JWTVerificationException("Token Invalid, not authorized.");
         }
+
     }
 
-    public String extraerUsername(DecodedJWT decodedJWT) {
-        return decodedJWT.getSubject();
+    public String extractUsername(DecodedJWT decodedJWT) {
+        return decodedJWT.getSubject().toString();
     }
 
-    public String getSpecificClaim(DecodedJWT decodedJWT, String claimName) {
-        return decodedJWT.getClaim(claimName).asString();
+    public Claim getSpecificClaim(DecodedJWT decodedJWT, String claimName) {
+        return decodedJWT.getClaim(claimName);
+    }
+
+    public Map<String, Claim> returnAllClaims(DecodedJWT decodedJWT) {
+        return decodedJWT.getClaims();
     }
 }

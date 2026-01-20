@@ -58,4 +58,15 @@ public class AuthController {
             @RequestBody @Valid com.churninsight.one.models.entities.usuario.UsuarioDto usuarioDto) {
         return ResponseEntity.ok(usuarioService.crear(usuarioDto));
     }
+
+
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthLoginRequest userRequest) {
+        try {
+            return new ResponseEntity<>(this.usuarioService.loginUsuario(userRequest), HttpStatus.OK);
+        } catch (DataAccessException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
+    }
 }
