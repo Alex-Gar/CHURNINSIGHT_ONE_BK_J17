@@ -1,17 +1,25 @@
 package com.churninsight.one.models.entities.prediccion;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.churninsight.one.models.entities.historialPredicciones.HistorialPrediccion;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +42,10 @@ public class Prediccion {
 
     @Column(name = "probabilidad")
     private Double probabilidad;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "relacion_predicciones_historial", joinColumns = @JoinColumn(name = "prediccion_id"), inverseJoinColumns = @JoinColumn(name = "historial_id"))
+    private Set<HistorialPrediccion> historiales = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -108,6 +120,14 @@ public class Prediccion {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public Set<HistorialPrediccion> getHistoriales() {
+        return historiales;
+    }
+
+    public void setHistoriales(Set<HistorialPrediccion> historiales) {
+        this.historiales = historiales;
     }
 
 }

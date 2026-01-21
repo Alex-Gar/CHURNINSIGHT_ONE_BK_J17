@@ -15,14 +15,12 @@ import static com.churninsight.one.mappers.InputModelViewMapper.toDto;
 import com.churninsight.one.models.dto.prediccion.PrediccionDSResponse;
 import com.churninsight.one.models.entities.historialPredicciones.HistorialPrediccion;
 import com.churninsight.one.models.entities.prediccion.Prediccion;
-import com.churninsight.one.models.entities.relacionHistorial.RelacionPrediccionHistorial;
 import com.churninsight.one.models.entities.vistas.outputModelViewDto;
 import com.churninsight.one.models.entities.vistas.outputModeloView;
 import com.churninsight.one.models.repositories.PrediccionRepository;
 import com.churninsight.one.services.HistorialPrediccionService;
 import com.churninsight.one.services.InputModeloViewService;
 import com.churninsight.one.services.PrediccionService;
-import com.churninsight.one.services.RelacionPrediccionHistorialService;
 
 import jakarta.transaction.Transactional;
 
@@ -41,8 +39,6 @@ public class PrediccionServiceImpl implements PrediccionService {
     @Autowired
     private HistorialPrediccionService historialPrediccionService;
 
-    @Autowired
-    private RelacionPrediccionHistorialService relacionPrediccionHistorialService;
     // URL del servicio de Data Science
     // @Value("${datascience.mock.url}")
     // private String dataScienceUrl;
@@ -59,7 +55,7 @@ public class PrediccionServiceImpl implements PrediccionService {
     @Transactional
     public Prediccion evaluarPrediccion(String idUsuario) {
 
-        outputModeloView usuario = this.inputModeloViewService.buscarPorId(idUsuario);
+        outputModeloView usuario = inputModeloViewService.buscarPorId(idUsuario);
         outputModelViewDto usuarioDto = toDto(usuario);
 
         HttpHeaders headers = new HttpHeaders();
@@ -72,32 +68,24 @@ public class PrediccionServiceImpl implements PrediccionService {
             throw new RuntimeException("Respuesta nula del servicio de predicción");
         }
 
-        Optional<Prediccion> optionalPrediccion = this.buscarUsuarioPorId(idUsuario);
+        Prediccion prediccion = buscarUsuarioPorId(idUsuario)
+                .orElseGet(() -> {
+                    Prediccion p = new Prediccion();
+                    p.setIdUsuario(idUsuario);
+                    return p;
+                });
 
-        Prediccion prediccion;
-
-        if (optionalPrediccion.isPresent()) {
-
-            prediccion = optionalPrediccion.get();
-
+        // Guardar historial ANTES de actualizar la predicción
+        if (prediccion.getId() != null) {
             HistorialPrediccion historial = new HistorialPrediccion();
             historial.setChurn(prediccion.getChurn());
             historial.setPrevision(prediccion.getPrevision());
             historial.setProbabilidad(prediccion.getProbabilidad());
 
-            this.historialPrediccionService.guardarHistorialPrediccion(historial);
-
-            RelacionPrediccionHistorial relacion = new RelacionPrediccionHistorial();
-            relacion.setPrediccion(prediccion);
-            relacion.setHistorial(historial);
-
-            this.relacionPrediccionHistorialService.guardarRelacion(relacion);
-
-        } else {
-            prediccion = new Prediccion();
-            prediccion.setIdUsuario(idUsuario);
+            prediccion.getHistoriales().add(historial);
         }
 
+        // Actualizar con nueva predicción
         prediccion.setChurn(response.churn());
         prediccion.setPrevision(response.prevision());
         prediccion.setProbabilidad(response.probabilidad());

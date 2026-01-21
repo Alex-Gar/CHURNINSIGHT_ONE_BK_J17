@@ -1,4 +1,4 @@
-package com.churninsight.one.Controllers;
+package com.churninsight.one.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

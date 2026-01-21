@@ -1,0 +1,10 @@
+CREATE TABLE
+   historial_predicciones (
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      churn BOOLEAN NOT NULL,
+      prevision VARCHAR(20),
+      probabilidad DOUBLE PRECISION,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      deleted_at TIMESTAMP NULL
+   );

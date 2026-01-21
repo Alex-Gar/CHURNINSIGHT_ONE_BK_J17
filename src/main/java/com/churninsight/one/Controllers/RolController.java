@@ -1,4 +1,4 @@
-package com.churninsight.one.Controllers;
+package com.churninsight.one.controllers;
 
 import java.util.List;
 

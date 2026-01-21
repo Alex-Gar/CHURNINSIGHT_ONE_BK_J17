@@ -6,18 +6,14 @@
 --   pg_stat_activity
 --WHERE
 --   datname = 'churninsight_db';
-
 --SELECT
 --   pg_terminate_backend (pid)
 --FROM
 --   pg_stat_activity
 --WHERE
 --   datname = 'churninsight_db';
-
 --DROP SCHEMA public CASCADE;
-
 --CREATE SCHEMA public;
-
 -- DROP DATABASE churninsight_db;
 -- CREATE DATABASE churninsight_db;
 CREATE TABLE
@@ -1134,70 +1130,6 @@ VALUES
 
 --------------------------------------------
 CREATE
-OR REPLACE VIEW vw_servicios_usuarios AS
-SELECT
-   u.id AS id_cliente,
-   u.genero,
-   CASE
-      WHEN EXTRACT(
-         YEAR
-         FROM
-            AGE (CURRENT_DATE, u.fecha_nacimiento)
-      ) >= 60 THEN 1
-      ELSE 0
-   END AS adulto,
-   u.tiene_conyuge AS tiene_pareja,
-   u.tiene_dependientes,
-   EXTRACT(
-      YEAR
-      FROM
-         AGE (CURRENT_DATE, u.created_at)
-   ) * 12 + EXTRACT(
-      MONTH
-      FROM
-         AGE (CURRENT_DATE, u.created_at)
-   ) AS antiguedad_meses,
-   s.id AS id_servicio,
-   s.tipo_contrato,
-   s.facturacion_electronica,
-   s.subscripcion_activa,
-   s.ultima_fecha_pago,
-   p.id AS id_plan,
-   p.servicio_telefono,
-   p.servicio_internet,
-   p.seguridad_en_linea,
-   p.respaldo_en_linea,
-   p.proteccion_dispositivo,
-   p.soporte_tecnico,
-   p.streaming_tv,
-   p.streaming_peliculas,
-   p.cargo_mensual,
-   (
-      p.cargo_mensual * (
-         EXTRACT(
-            YEAR
-            FROM
-               AGE (CURRENT_DATE, u.created_at)
-         ) * 12 + EXTRACT(
-            MONTH
-            FROM
-               AGE (CURRENT_DATE, u.created_at)
-         )
-      )
-   ) AS cargos_totales,
-   u.created_at AS fecha_alta_cliente,
-   s.created_at AS fecha_alta_servicio
-FROM
-   usuarios u
-   JOIN servicios s ON u.id = s.id_usuario
-   JOIN planes p ON s.id_plan = p.id
-WHERE
-   u.deleted_at IS NULL
-   AND s.deleted_at IS NULL
-   AND p.deleted_at IS NULL;
-
----------------------------------------------
-CREATE
 OR REPLACE VIEW vw_output_modelo AS
 SELECT
    u.id AS id_cliente,
@@ -1255,12 +1187,40 @@ WHERE
    u.deleted_at IS NULL
    AND s.deleted_at IS NULL
    AND p.deleted_at IS NULL;
-   
- SELECT * FROM usuarios WHERE id = 'USR000010';
- SELECT * FROM predicciones;
- SELECT * FROM historial_predicciones;
- SELECT * FROM vw_output_modelo;
- SELECT * FROM relacion_predicciones_historial;
- SELECT * FROM servicios;
- SELECT * FROM planes;
 
+SELECT
+   *
+FROM
+   usuarios
+WHERE
+   id = 'USR000010';
+
+SELECT
+   *
+FROM
+   predicciones;
+
+SELECT
+   *
+FROM
+   historial_predicciones;
+
+SELECT
+   *
+FROM
+   vw_output_modelo;
+
+SELECT
+   *
+FROM
+   relacion_predicciones_historial;
+
+SELECT
+   *
+FROM
+   servicios;
+
+SELECT
+   *
+FROM
+   planes;
