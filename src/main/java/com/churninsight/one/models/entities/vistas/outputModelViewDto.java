@@ -16,7 +16,7 @@ public record outputModelViewDto(
 
         @JsonProperty("tiene_dependientes") String tieneDependientes,
 
-        @JsonProperty("antiguedad_meses") Integer antiguedadMeses,
+        @JsonProperty("antiguedad_meses") BigDecimal antiguedadMeses,
 
         @JsonProperty("servicio_telefono") String servicioTelefono,
 

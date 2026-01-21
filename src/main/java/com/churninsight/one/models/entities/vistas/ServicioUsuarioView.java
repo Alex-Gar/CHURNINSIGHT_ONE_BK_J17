@@ -1,7 +1,6 @@
 package com.churninsight.one.models.entities.vistas;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Immutable;
@@ -31,7 +30,7 @@ public class ServicioUsuarioView {
     private Boolean tieneDependientes;
 
     @Column(name = "antiguedad_meses")
-    private Integer antiguedadmeses;
+    private BigDecimal antiguedadmeses;
 
     @Column(name = "id_servicio")
     private Long idServicio;
@@ -46,7 +45,7 @@ public class ServicioUsuarioView {
     private Boolean subscripcionActiva;
 
     @Column(name = "ultima_fecha_pago")
-    private LocalDate ultimaFechaPago;
+    private LocalDateTime ultimaFechaPago;
 
     @Column(name = "id_plan")
     private Long idPlan;
@@ -55,7 +54,7 @@ public class ServicioUsuarioView {
     private Boolean servicioTelefono;
 
     @Column(name = "servicio_internet")
-    private Boolean servicioInternet;
+    private String servicioInternet;
 
     @Column(name = "seguridad_en_linea")
     private Boolean seguridadEnLinea;
@@ -127,11 +126,11 @@ public class ServicioUsuarioView {
         this.tieneDependientes = tieneDependientes;
     }
 
-    public Integer getAntiguedadmeses() {
+    public BigDecimal getAntiguedadmeses() {
         return antiguedadmeses;
     }
 
-    public void setAntiguedadmeses(Integer antiguedadmeses) {
+    public void setAntiguedadmeses(BigDecimal antiguedadmeses) {
         this.antiguedadmeses = antiguedadmeses;
     }
 
@@ -167,11 +166,11 @@ public class ServicioUsuarioView {
         this.subscripcionActiva = subscripcionActiva;
     }
 
-    public LocalDate getUltimaFechaPago() {
+    public LocalDateTime getUltimaFechaPago() {
         return ultimaFechaPago;
     }
 
-    public void setUltimaFechaPago(LocalDate ultimaFechaPago) {
+    public void setUltimaFechaPago(LocalDateTime ultimaFechaPago) {
         this.ultimaFechaPago = ultimaFechaPago;
     }
 
@@ -191,11 +190,11 @@ public class ServicioUsuarioView {
         this.servicioTelefono = servicioTelefono;
     }
 
-    public Boolean getServicioInternet() {
+    public String getServicioInternet() {
         return servicioInternet;
     }
 
-    public void setServicioInternet(Boolean servicioInternet) {
+    public void setServicioInternet(String servicioInternet) {
         this.servicioInternet = servicioInternet;
     }
 

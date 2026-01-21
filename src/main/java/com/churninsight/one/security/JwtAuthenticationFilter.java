@@ -38,10 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtToken != null) {
             jwtToken = jwtToken.substring(7);
 
-            DecodedJWT decodedJWT = jwtUtils.validateToken(jwtToken);
+            DecodedJWT decodedJWT = this.jwtUtils.validateToken(jwtToken);
 
-            String username = jwtUtils.extractUsername(decodedJWT);
-            String stringAuthorities = jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
+            String username = this.jwtUtils.extractUsername(decodedJWT);
+            String stringAuthorities = this.jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
 
             Collection<? extends GrantedAuthority> authorities = AuthorityUtils
                     .commaSeparatedStringToAuthorityList(stringAuthorities);
@@ -49,11 +49,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContext context = SecurityContextHolder.getContext();
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
             context.setAuthentication(authentication);
+
             SecurityContextHolder.setContext(context);
         }
-
         filterChain.doFilter(request, response);
-
     }
 
 }

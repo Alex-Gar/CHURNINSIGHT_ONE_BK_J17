@@ -1,6 +1,5 @@
 package com.churninsight.one.models.entities.servicio;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
@@ -16,9 +15,9 @@ public record ServicioDto(
         String idUsuario,
 
         @NotNull(message = "El plan es obligatorio")
-        Integer idPlan,
+        Long idPlan,
 
-        LocalDate ultimaFechaPago,
+        LocalDateTime ultimaFechaPago,
 
         @NotNull(message = "La facturación es obligatoria")
         Boolean facturacionElectronica,

@@ -1,5 +1,6 @@
 package com.churninsight.one.models.entities.usuario;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.Email;
@@ -27,7 +28,7 @@ public record UsuarioDto(
         @NotBlank(message = "El teléfono es obligatorio") @Pattern(regexp = "^[0-9]{10}$", message = "El teléfono debe contener 10 dígitos") 
         String telefono,
         @NotNull(message = "La fecha de nacimiento es obligatoria") 
-        LocalDateTime fechaNacimiento,
+        LocalDate fechaNacimiento,
         @NotBlank(message = "El género es obligatorio") @Pattern(regexp = "MASCULINO|FEMENINO|OTRO", message = "El género debe ser MASCULINO, FEMENINO u OTRO") 
         String genero,
         Boolean tieneConyuge,

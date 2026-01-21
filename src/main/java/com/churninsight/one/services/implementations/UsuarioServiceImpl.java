@@ -1,6 +1,7 @@
 package com.churninsight.one.services.implementations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -257,9 +259,26 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = this.usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("El usuario " + email + " no existe."));
+
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+
+        usuario.getRoles()
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getNombre()))));
+
+        usuario.getRoles().stream()
+                .flatMap(role -> role.getPermisos().stream())
+                .forEach(permisos -> authorityList.add(new SimpleGrantedAuthority(permisos.getNombre())));
+
+        return new User(usuario.getNombre(),
+                usuario.getPassword(),
+                usuario.getIsEnabled(),
+                usuario.getAccountNoExpired(),
+                usuario.getCredentialNoExpired(),
+                usuario.getAccountNoLocked(),
+                authorityList);
     }
 
 }

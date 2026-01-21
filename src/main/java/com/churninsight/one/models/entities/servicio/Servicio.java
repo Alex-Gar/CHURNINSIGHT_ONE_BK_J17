@@ -1,6 +1,5 @@
 package com.churninsight.one.models.entities.servicio;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -28,10 +27,10 @@ public class Servicio {
     private String idUsuario;
 
     @Column(name = "id_plan")
-    private Integer idPlan;
+    private Long idPlan;
 
     @Column(name = "ultima_fecha_pago")
-    private LocalDate ultimaFechaPago;
+    private LocalDateTime ultimaFechaPago;
 
     @Column(name = "facturacion_electronica")
     private Boolean facturacionElectronica;
@@ -69,19 +68,19 @@ public class Servicio {
         this.idUsuario = idUsuario;
     }
 
-    public Integer getIdPlan() {
+    public Long getIdPlan() {
         return idPlan;
     }
 
-    public void setIdPlan(Integer idPlan) {
+    public void setIdPlan(Long idPlan) {
         this.idPlan = idPlan;
     }
 
-    public LocalDate getUltimaFechaPago() {
+    public LocalDateTime getUltimaFechaPago() {
         return ultimaFechaPago;
     }
 
-    public void setUltimaFechaPago(LocalDate ultimaFechaPago) {
+    public void setUltimaFechaPago(LocalDateTime ultimaFechaPago) {
         this.ultimaFechaPago = ultimaFechaPago;
     }
 
