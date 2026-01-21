@@ -50,7 +50,7 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
             nuevoHistorialPrediccion.setPrevision(historialPrediccionDto.prevision());
             nuevoHistorialPrediccion.setProbabilidad(historialPrediccionDto.probabilidad());
 
-            HistorialPrediccion resultado = this.historialPrediccionRepository.save(nuevoHistorialPrediccion);
+            HistorialPrediccion resultado = this.guardarHistorialPrediccion(nuevoHistorialPrediccion);
             System.out.println("ID: " + nuevoHistorialPrediccion.getId());
             ApiResponse response = new ApiResponse("HistorialPrediccion creado con éxito", true, resultado);
             return response;
@@ -71,7 +71,7 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
                     historialPrediccion.setPrevision(historialPrediccionDto.prevision());
                     historialPrediccion.setProbabilidad(historialPrediccionDto.probabilidad());
 
-                    HistorialPrediccion resultado = this.historialPrediccionRepository.save(historialPrediccion);
+                    HistorialPrediccion resultado = this.guardarHistorialPrediccion(historialPrediccion);
                     ApiResponse response = new ApiResponse("Historial Predicción editado con éxito", true, resultado);
                     return response;
                 } else {
@@ -95,7 +95,8 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
     @Override
     public Page<HistorialPrediccion> listarHistorialActivos(Integer pagina, Integer tamanio) {
         Pageable pageable = PageRequest.of(pagina, tamanio);
-        Page<HistorialPrediccion> resultado = this.historialPrediccionRepository.findAllActiveHistorialPrediccions(pageable);
+        Page<HistorialPrediccion> resultado = this.historialPrediccionRepository
+                .findAllActiveHistorialPrediccions(pageable);
         if (resultado == null || resultado.isEmpty()) {
             throw new ResourceNotFoundException("historiales predicción");
         }
@@ -133,6 +134,11 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
             ApiResponse response = new ApiResponse("Usuario eliminado con éxito", true);
             return response;
         }
+    }
+
+    @Override
+    public HistorialPrediccion guardarHistorialPrediccion(HistorialPrediccion historialPrediccion) {
+        return this.historialPrediccionRepository.save(historialPrediccion);
     }
 
 }

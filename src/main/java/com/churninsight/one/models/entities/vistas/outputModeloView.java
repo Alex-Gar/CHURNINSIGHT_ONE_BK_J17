@@ -1,8 +1,6 @@
-package com.churninsight.one.models.entities.vwInput;
+package com.churninsight.one.models.entities.vistas;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Immutable;
 
@@ -12,9 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "vw_servicios_usuarios")
+@Table(name = "vw_output_modelo")
 @Immutable
-public class ServicioUsuarioView {
+public class outputModeloView {
 
     @Id
     @Column(name = "id_cliente")
@@ -22,7 +20,8 @@ public class ServicioUsuarioView {
 
     private String genero;
 
-    private Integer adulto;
+    @Column(name = "adulto_mayor")
+    private Integer adultoMayor;
 
     @Column(name = "tiene_pareja")
     private Boolean tienePareja;
@@ -31,31 +30,16 @@ public class ServicioUsuarioView {
     private Boolean tieneDependientes;
 
     @Column(name = "antiguedad_meses")
-    private Integer antiguedadmeses;
-
-    @Column(name = "id_servicio")
-    private Long idServicio;
-
-    @Column(name = "tipo_contrato")
-    private String tipoContrato;
-
-    @Column(name = "facturacion_electronica")
-    private Boolean facturacionElectronica;
-
-    @Column(name = "subscripcion_activa")
-    private Boolean subscripcionActiva;
-
-    @Column(name = "ultima_fecha_pago")
-    private LocalDate ultimaFechaPago;
-
-    @Column(name = "id_plan")
-    private Long idPlan;
+    private BigDecimal antiguedadmeses;
 
     @Column(name = "servicio_telefono")
     private Boolean servicioTelefono;
 
+    @Column(name = "lineas_multiples")
+    private Boolean lineasMultiples;
+
     @Column(name = "servicio_internet")
-    private Boolean servicioInternet;
+    private String servicioInternet;
 
     @Column(name = "seguridad_en_linea")
     private Boolean seguridadEnLinea;
@@ -75,17 +59,20 @@ public class ServicioUsuarioView {
     @Column(name = "streaming_peliculas")
     private Boolean streamingPeliculas;
 
+    @Column(name = "tipo_contrato")
+    private String tipoContrato;
+
+    @Column(name = "facturacion_electronica")
+    private Boolean facturacionElectronica;
+
+    @Column(name = "metodo_pago")
+    private String metodoPago;
+
     @Column(name = "cargo_mensual")
     private BigDecimal cargoMensual;
 
     @Column(name = "cargos_totales")
     private BigDecimal cargosTotales;
-
-    @Column(name = "fecha_alta_cliente")
-    private LocalDateTime fechaAltaCliente;
-
-    @Column(name = "fecha_alta_servicio")
-    private LocalDateTime fechaAltaServicio;
 
     public String getIdCliente() {
         return idCliente;
@@ -103,12 +90,12 @@ public class ServicioUsuarioView {
         this.genero = genero;
     }
 
-    public Integer getAdulto() {
-        return adulto;
+    public Integer getAdultoMayor() {
+        return adultoMayor;
     }
 
-    public void setAdulto(Integer adulto) {
-        this.adulto = adulto;
+    public void setAdultoMayor(Integer adultoMayor) {
+        this.adultoMayor = adultoMayor;
     }
 
     public Boolean getTienePareja() {
@@ -127,60 +114,12 @@ public class ServicioUsuarioView {
         this.tieneDependientes = tieneDependientes;
     }
 
-    public Integer getAntiguedadmeses() {
+    public BigDecimal getAntiguedadmeses() {
         return antiguedadmeses;
     }
 
-    public void setAntiguedadmeses(Integer antiguedadmeses) {
+    public void setAntiguedadmeses(BigDecimal antiguedadmeses) {
         this.antiguedadmeses = antiguedadmeses;
-    }
-
-    public Long getIdServicio() {
-        return idServicio;
-    }
-
-    public void setIdServicio(Long idServicio) {
-        this.idServicio = idServicio;
-    }
-
-    public String getTipoContrato() {
-        return tipoContrato;
-    }
-
-    public void setTipoContrato(String tipoContrato) {
-        this.tipoContrato = tipoContrato;
-    }
-
-    public Boolean getFacturacionElectronica() {
-        return facturacionElectronica;
-    }
-
-    public void setFacturacionElectronica(Boolean facturacionElectronica) {
-        this.facturacionElectronica = facturacionElectronica;
-    }
-
-    public Boolean getSubscripcionActiva() {
-        return subscripcionActiva;
-    }
-
-    public void setSubscripcionActiva(Boolean subscripcionActiva) {
-        this.subscripcionActiva = subscripcionActiva;
-    }
-
-    public LocalDate getUltimaFechaPago() {
-        return ultimaFechaPago;
-    }
-
-    public void setUltimaFechaPago(LocalDate ultimaFechaPago) {
-        this.ultimaFechaPago = ultimaFechaPago;
-    }
-
-    public Long getIdPlan() {
-        return idPlan;
-    }
-
-    public void setIdPlan(Long idPlan) {
-        this.idPlan = idPlan;
     }
 
     public Boolean getServicioTelefono() {
@@ -191,11 +130,11 @@ public class ServicioUsuarioView {
         this.servicioTelefono = servicioTelefono;
     }
 
-    public Boolean getServicioInternet() {
+    public String getServicioInternet() {
         return servicioInternet;
     }
 
-    public void setServicioInternet(Boolean servicioInternet) {
+    public void setServicioInternet(String servicioInternet) {
         this.servicioInternet = servicioInternet;
     }
 
@@ -247,6 +186,30 @@ public class ServicioUsuarioView {
         this.streamingPeliculas = streamingPeliculas;
     }
 
+    public String getTipoContrato() {
+        return tipoContrato;
+    }
+
+    public void setTipoContrato(String tipoContrato) {
+        this.tipoContrato = tipoContrato;
+    }
+
+    public Boolean getFacturacionElectronica() {
+        return facturacionElectronica;
+    }
+
+    public void setFacturacionElectronica(Boolean facturacionElectronica) {
+        this.facturacionElectronica = facturacionElectronica;
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
     public BigDecimal getCargoMensual() {
         return cargoMensual;
     }
@@ -263,20 +226,12 @@ public class ServicioUsuarioView {
         this.cargosTotales = cargosTotales;
     }
 
-    public LocalDateTime getFechaAltaCliente() {
-        return fechaAltaCliente;
+    public Boolean getLineasMultiples() {
+        return lineasMultiples;
     }
 
-    public void setFechaAltaCliente(LocalDateTime fechaAltaCliente) {
-        this.fechaAltaCliente = fechaAltaCliente;
-    }
-
-    public LocalDateTime getFechaAltaServicio() {
-        return fechaAltaServicio;
-    }
-
-    public void setFechaAltaServicio(LocalDateTime fechaAltaServicio) {
-        this.fechaAltaServicio = fechaAltaServicio;
+    public void setLineasMultiples(Boolean lineasMultiples) {
+        this.lineasMultiples = lineasMultiples;
     }
 
 }

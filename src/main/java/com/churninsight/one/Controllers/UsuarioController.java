@@ -72,13 +72,7 @@ public class UsuarioController {
         return new ResponseEntity<>(resultado, HttpStatus.OK);
     }
 
-    @Tag(name = "Crear usuario", description = "Endpoints para crear usuario")
-    @PostMapping
-    public ResponseEntity<ApiResponse> crearUsuario(@Valid @RequestBody UsuarioDto usuarioDto) {
-        ApiResponse nuevoUsuario = this.usuarioService.crear(usuarioDto);
-        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
-    }
-
+  
     @Tag(name = "Editar usuario", description = "Endpoint para editar usuario")
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse> editarUsuarios(@Valid @PathVariable String id,

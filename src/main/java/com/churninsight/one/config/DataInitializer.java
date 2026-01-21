@@ -1,6 +1,6 @@
 package com.churninsight.one.config;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -36,7 +36,7 @@ public class DataInitializer {
                 admin.setEmail("admin@churninsight.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setTelefono("0000000000");
-                admin.setFechaNacimiento(LocalDateTime.now());
+                admin.setFechaNacimiento(LocalDate.now());
                 admin.setGenero("O");
                 admin.setTieneConyuge(false);
                 admin.setTieneDependientes(false);

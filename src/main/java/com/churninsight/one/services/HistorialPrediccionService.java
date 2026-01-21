@@ -26,4 +26,6 @@ public interface HistorialPrediccionService {
 
     public ApiResponse borradoLogico(Long id);
 
+    public HistorialPrediccion guardarHistorialPrediccion(HistorialPrediccion historialPrediccion);
+
 }

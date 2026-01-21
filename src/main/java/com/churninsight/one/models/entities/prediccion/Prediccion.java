@@ -1,4 +1,4 @@
-package com.churninsight.one.models.entities.servicio;
+package com.churninsight.one.models.entities.prediccion;
 
 import java.time.LocalDateTime;
 
@@ -15,31 +15,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "servicios")
+@Table(name = "predicciones")
 @EntityListeners(AuditingEntityListener.class)
-public class Servicio {
+public class Prediccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_usuario")
+    @Column(name = "usuario_id", nullable = false)
     private String idUsuario;
 
-    @Column(name = "id_plan")
-    private Long idPlan;
+    @Column(name = "churn")
+    private Boolean churn;
 
-    @Column(name = "ultima_fecha_pago")
-    private LocalDateTime ultimaFechaPago;
+    @Column(name = "prevision")
+    private String prevision;
 
-    @Column(name = "facturacion_electronica")
-    private Boolean facturacionElectronica;
-
-    @Column(name = "tipo_contrato")
-    private String tipoContrato;
-
-    @Column(name = "subscripcion_activa")
-    private Boolean subscripcionActiva;
+    @Column(name = "probabilidad")
+    private Double probabilidad;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -68,44 +62,28 @@ public class Servicio {
         this.idUsuario = idUsuario;
     }
 
-    public Long getIdPlan() {
-        return idPlan;
+    public Boolean getChurn() {
+        return churn;
     }
 
-    public void setIdPlan(Long idPlan) {
-        this.idPlan = idPlan;
+    public void setChurn(Boolean churn) {
+        this.churn = churn;
     }
 
-    public LocalDateTime getUltimaFechaPago() {
-        return ultimaFechaPago;
+    public String getPrevision() {
+        return prevision;
     }
 
-    public void setUltimaFechaPago(LocalDateTime ultimaFechaPago) {
-        this.ultimaFechaPago = ultimaFechaPago;
+    public void setPrevision(String prevision) {
+        this.prevision = prevision;
     }
 
-    public Boolean getFacturacionElectronica() {
-        return facturacionElectronica;
+    public Double getProbabilidad() {
+        return probabilidad;
     }
 
-    public void setFacturacionElectronica(Boolean facturacionElectronica) {
-        this.facturacionElectronica = facturacionElectronica;
-    }
-
-    public String getTipoContrato() {
-        return tipoContrato;
-    }
-
-    public void setTipoContrato(String tipoContrato) {
-        this.tipoContrato = tipoContrato;
-    }
-
-    public Boolean getSubscripcionActiva() {
-        return subscripcionActiva;
-    }
-
-    public void setSubscripcionActiva(Boolean subscripcionActiva) {
-        this.subscripcionActiva = subscripcionActiva;
+    public void setProbabilidad(Double probabilidad) {
+        this.probabilidad = probabilidad;
     }
 
     public LocalDateTime getCreatedAt() {

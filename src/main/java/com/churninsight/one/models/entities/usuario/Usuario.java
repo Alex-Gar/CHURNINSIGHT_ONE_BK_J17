@@ -1,11 +1,15 @@
 package com.churninsight.one.models.entities.usuario;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.utils.GeneradorId;
 
 import jakarta.persistence.Column;
@@ -19,9 +23,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
-import com.churninsight.one.models.entities.rol.Rol;
 
 @Entity
 @Table(name = "usuarios")
@@ -51,7 +52,7 @@ public class Usuario {
     private String telefono;
 
     @Column(name = "fecha_nacimiento")
-    private LocalDateTime fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     @Column(name = "genero")
     private String genero;
@@ -160,11 +161,11 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public LocalDateTime getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

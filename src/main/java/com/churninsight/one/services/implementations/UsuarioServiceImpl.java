@@ -1,24 +1,40 @@
 package com.churninsight.one.services.implementations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.exceptions.ResourceNotFoundException;
+import com.churninsight.one.models.dto.request.AuthResponse;
+import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.entities.usuario.Usuario;
 import com.churninsight.one.models.entities.usuario.UsuarioDto;
-import com.churninsight.one.models.entities.rol.Rol;
 import com.churninsight.one.models.peyload.ApiResponse;
+import com.churninsight.one.models.peyload.LoginRequest;
 import com.churninsight.one.models.repositories.UsuarioRepository;
+import com.churninsight.one.security.JwtUtils;
 import com.churninsight.one.services.UsuarioService;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService {
+public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -27,7 +43,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     private com.churninsight.one.models.repositories.RolRepository rolRepository;
 
     @Autowired
-    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     @Override
@@ -53,32 +72,43 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Transactional
     @Override
-    public ApiResponse crear(UsuarioDto usuarioDto) {
-        try {
-            Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre(usuarioDto.nombre());
-            nuevoUsuario.setPApellido(usuarioDto.pApellido());
-            nuevoUsuario.setSApellido(usuarioDto.sApellido());
-            nuevoUsuario.setEmail(usuarioDto.email());
-            nuevoUsuario.setPassword(passwordEncoder.encode(usuarioDto.password()));
-            nuevoUsuario.setTelefono(usuarioDto.telefono());
-            nuevoUsuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
-            nuevoUsuario.setGenero(usuarioDto.genero());
-            nuevoUsuario.setTieneConyuge(usuarioDto.tieneConyuge());
-            nuevoUsuario.setTieneDependientes(usuarioDto.tieneDependientes());
+    public AuthResponse crearUsuario(UsuarioDto usuarioDto) {
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setNombre(usuarioDto.nombre());
+        nuevoUsuario.setPApellido(usuarioDto.pApellido());
+        nuevoUsuario.setSApellido(usuarioDto.sApellido());
+        nuevoUsuario.setEmail(usuarioDto.email());
+        nuevoUsuario.setPassword(passwordEncoder.encode(usuarioDto.password()));
+        nuevoUsuario.setTelefono(usuarioDto.telefono());
+        nuevoUsuario.setFechaNacimiento(usuarioDto.fechaNacimiento());
+        nuevoUsuario.setGenero(usuarioDto.genero());
+        nuevoUsuario.setTieneConyuge(usuarioDto.tieneConyuge());
+        nuevoUsuario.setTieneDependientes(usuarioDto.tieneDependientes());
 
-            // Asignar rol USUARIO por defecto
-            Rol rolUsuario = rolRepository.findByNombre("USUARIO")
-                    .orElseThrow(() -> new ResourceNotFoundException("Rol USUARIO no encontrado en la base de datos"));
-            nuevoUsuario.setRoles(java.util.List.of(rolUsuario));
+        // Asignar rol USUARIO por defecto
+        Rol rolUsuario = rolRepository.findByNombre("USUARIO")
+                .orElseThrow(() -> new ResourceNotFoundException("Rol USUARIO no encontrado en la base de datos"));
+        nuevoUsuario.setRoles(java.util.List.of(rolUsuario));
 
-            Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
-            System.out.println("ID: " + nuevoUsuario.getId());
-            ApiResponse response = new ApiResponse("Usuario creado con éxito", true, resultado);
-            return response;
-        } catch (DataAccessException ex) {
-            throw new BadRequestException(ex.getMessage());
-        }
+        Usuario resultado = this.usuarioRepository.save(nuevoUsuario);
+
+        ArrayList<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+
+        resultado.getRoles()
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getNombre()))));
+
+        resultado.getRoles()
+                .stream()
+                .flatMap(role -> role.getPermisos().stream())
+                .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getNombre())));
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(resultado.getEmail(),
+                resultado.getPassword(), authorityList);
+        String accessToken = this.jwtUtils.createToken(authentication);
+        AuthResponse authResponse = new AuthResponse(resultado.getEmail(), "Usuario creado, Bienvenido", accessToken,
+                true);
+        return authResponse;
+
     }
 
     @Transactional
@@ -201,4 +231,59 @@ public class UsuarioServiceImpl implements UsuarioService {
             return new ApiResponse("El usuario no tiene este rol asignado", false, null);
         }
     }
+
+    @Override
+    public AuthResponse loginUsuario(LoginRequest loginRequest) {
+        String userEmail = loginRequest.email();
+        String password = loginRequest.password();
+
+        Authentication authentication = this.authenticate(userEmail, password);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = this.jwtUtils.createToken(authentication);
+
+        AuthResponse authReponse = new AuthResponse(userEmail, "Login exitoso", token, true);
+        return authReponse;
+    }
+
+    public Authentication authenticate(String userEmail, String password) {
+        UserDetails userDetails = this.loadUserByUsername(userEmail);
+        System.out.println(userDetails);
+
+        if (userDetails == null) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
+
+        if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+
+        return new UsernamePasswordAuthenticationToken(userEmail, userDetails.getPassword(),
+                userDetails.getAuthorities());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = this.usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("El usuario " + email + " no existe."));
+
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+
+        usuario.getRoles()
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getNombre()))));
+
+        usuario.getRoles().stream()
+                .flatMap(role -> role.getPermisos().stream())
+                .forEach(permisos -> authorityList.add(new SimpleGrantedAuthority(permisos.getNombre())));
+
+        return new User(usuario.getNombre(),
+                usuario.getPassword(),
+                usuario.getIsEnabled(),
+                usuario.getAccountNoExpired(),
+                usuario.getCredentialNoExpired(),
+                usuario.getAccountNoLocked(),
+                authorityList);
+    }
+
 }
