@@ -8,10 +8,14 @@ public enum Genero {
     OTHER;
 
     @JsonCreator
-    public static Genero from(String data){
-        if (data == null || data.isBlank()){
+    public static Genero from(String data) {
+        if (data == null || data.isBlank()) {
             return null;
         }
-        return Genero.valueOf(data.trim().toUpperCase());
+        try {
+            return Genero.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("El Genero" + data + "No es Valido!");
+        }
     }
 }

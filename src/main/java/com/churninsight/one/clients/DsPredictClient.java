@@ -22,7 +22,14 @@ public class DsPredictClient {
                 .build();
     }
 
-    public DatosDsPredict obtenerPrediccion(DatosObtenerPrediccionCliente datos){;
+    public DatosDsPredict obtenerPrediccion(DatosObtenerPrediccionCliente datos){
+
+        try {
+            String cuerpo = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(datos);
+            System.out.printf("DEBUG JSON ENVIADO: " + cuerpo);
+        }catch (Exception e){
+            System.out.println("No se pudo loguear el JSON");
+        }
 
         return restClient.post()
                 .uri("/predict")

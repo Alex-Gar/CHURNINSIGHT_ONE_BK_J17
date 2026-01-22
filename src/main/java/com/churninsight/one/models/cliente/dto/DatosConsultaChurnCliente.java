@@ -19,7 +19,6 @@ public record DatosConsultaChurnCliente(
         @NotBlank(message = "idCliente es obligatorio")
         String idCliente,
 
-
         @NotNull(message = "genero es obligatorio")
         Genero genero,
 

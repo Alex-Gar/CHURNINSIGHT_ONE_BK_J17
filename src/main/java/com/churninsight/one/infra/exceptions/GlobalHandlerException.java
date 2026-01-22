@@ -1,5 +1,6 @@
 package com.churninsight.one.infra.exceptions;
 
+import com.churninsight.one.infra.exceptions.ex.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,28 @@ public class GlobalHandlerException {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleJsonParseError(HttpMessageNotReadableException ex){
         Throwable causa = ex.getCause();
+        Map<String, Object> body = new HashMap<>();
 
         if (causa instanceof InvalidFormatException ife) {
-            Map<String, Object> body = new HashMap<>();
             body.put("error", "Valor invalido en el JSON");
             body.put("campo", ife.getPath().get(0).getFieldName());
             body.put("valor", ife.getValue());
-            body.put("mensaje", ife.getOriginalMessage());
-
+            body.put("mensaje", "El formato del dato no es correcto para este campo.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                Map.of(
-                        "error", "El JSON esta mal Fromado", "mensaje", ex.getMessage()
-                ));
+
+        body.put("error", "El JSON está mal formado");
+
+        String mesnajeAmigable = (ex.getMessage() != null && ex.getMessage().contains("Required request body is missing"))
+                ? "El cuerpo de la solicitud es obligatorio y no fue enviado."
+                : "Error al procesar el JSON. Verifica la sintaxis.";
+
+        body.put("mensaje", mesnajeAmigable);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handlerInlegaArgument(IllegalArgumentException ex){
@@ -56,6 +64,13 @@ public class GlobalHandlerException {
                         "campos", errores
                 )
         );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }

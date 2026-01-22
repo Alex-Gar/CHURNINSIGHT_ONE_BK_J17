@@ -9,11 +9,16 @@ public enum MetodoPago {
     CREDIT_CARD;
 
     @JsonCreator
-    public static final MetodoPago from(String data){
-        if (data == null || data.isBlank()){
+    public static final MetodoPago from(String data) {
+        if (data == null || data.isBlank()) {
             return null;
         }
-        return MetodoPago.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        try {
+            return MetodoPago.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("El Metodo de Pago" + data + "No es valido." + ex.getMessage());
+        }
+
     }
 
 }

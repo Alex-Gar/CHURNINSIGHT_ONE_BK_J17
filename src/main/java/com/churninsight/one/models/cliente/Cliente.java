@@ -5,10 +5,13 @@ import com.churninsight.one.enums.MetodoPago;
 import com.churninsight.one.enums.ServicioInternet;
 import com.churninsight.one.enums.TipoContrato;
 import com.churninsight.one.models.cliente.dto.DatosConsultaChurnCliente;
+import com.churninsight.one.models.historico.Historico;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "clientes")
 @Entity
@@ -17,7 +20,6 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 
 public class Cliente {
 
@@ -94,6 +96,9 @@ public class Cliente {
     private Double probabilidad;
 
     private Boolean churn;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Historico> historialChurn = new ArrayList<>();
 
     private Boolean activo;
 

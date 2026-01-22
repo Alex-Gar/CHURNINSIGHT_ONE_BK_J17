@@ -30,6 +30,164 @@ Propuesta enfocada en la colaboración para el sistema ChurnInsight, basada en u
 - [🧪 Cambio 2: Flujo MVP preparado para mocks y evolución del modelo DS](#-cambio-2-flujo-mvp-preparado-para-mocks-y-evolución-del-modelo-ds)
 - [🛡️ Cambio 3: Manejo centralizado de errores y validaciones](#-cambio-3-manejo-centralizado-de-errores-y-validaciones)
 
+### Commit "Docker-deployd-test-oci"
+
+- [🐳 Contenerización del servicio y externalización de configuración](#-contenerización-del-servicio-y-externalización-de-configuración)
+- [🔌 Pruebas del Endpoint de Predicción (MVP)](#-pruebas-del-endpoint-de-predicción-mvp)
+
+
+---
+
+
+# 🔌 Pruebas del Endpoint de Predicción (MVP)
+
+**Esta aplicación expone un endpoint de predicción de churn listo para pruebas funcionales e integración con el modelo de Data Science.**
+
+# 🚀 Endpoint de Predicción
+````
+
+URL:
+        http://163.192.138.89:8084/predict
+Método:
+        POST        
+Body:
+        Json(Contrato)
+````
+### Body 
+- RESPOSE:
+  - Json Contrato
+- REQUEST:  
+  - Detalle del cliente con resultado de la predicción
+
+
+
+
+## 🧪 Servicio Mock de Predicción (DS)
+
+**El backend consume un servicio mock que simula el sistema de predicción de Data Science, permitiendo validar el flujo completo sin depender del modelo final.**
+
+````
+
+URL:
+        http://163.192.138.89:8081/api/churn/predict
+Método: 
+        POST
+Body:
+        Json(Contrato)
+````
+### Body   [Contrato JSON](#contrato-json)
+
+
+> 
+> 
+> ## 🔄 Flujo de Ejecución
+>
+>- El cliente envía la solicitud al endpoint /predict
+>
+>- El backend valida y normaliza el contrato
+>
+>- Se consume el servicio de predicción (mock o real)
+>
+>- Se retorna la respuesta consolidada
+>
+> 
+> ```
+>          Cliente
+>          │
+>          ▼
+>          POST /predict
+>          │
+>          ▼
+>          Validación + Normalización
+>          │
+>          ▼
+>          Dominio (Cliente)
+>          │
+>          ▼
+>          Servicio de Predicción (Mock / Real)
+>          │
+>          ▼
+>          Respuesta consolidada
+>
+>```
+> 
+> 
+ 
+--- 
+
+
+> ---
+># la CONFIGURACION Y DOCKEY ESTAN PENDIeNTES al despliegue  
+> ## ⚙️ Configuración del Servicio de Predicción
+> - ESTA PARTE ES ALEATORIAO PENDIENTE A LA EJECUCION DEL PREOCESO HAU NO REALIZADO 
+> - ESTA PENDIENTE 
+>- El endpoint de predicción externo se configura mediante variable de entorno:
+>
+>MOCK_SERVICE_URL=http://163.192.138.89:8081/api/churn
+>
+>## 🐳 Ejecución con Docker
+>    chuycode/churn-api
+> chuycode/churn-api
+>
+>El servicio puede ejecutarse mediante Docker:
+>
+>docker build -t churninsight-backend .
+>docker run -p 8084:8084 \
+>-e MOCK_SERVICE_URL=http://163.192.138.89:8081/api/churn \
+>churninsight-backend
+
+>## 📌 Notas Técnicas
+>
+>- Arquitectura del servidor: ARM64
+>- El servicio de predicción puede ser reemplazado directamente por el modelo real de DS
+>- Este MVP está orientado a pruebas funcionales e integración temprana
+
+---
+
+
+# 🐳 Contenerización del servicio y externalización de configuración
+
+**Se incorporó la contenerización del proyecto mediante Docker y se ajustó el cliente de predicción para consumir la URL del servicio externo a través de variables de entorno, evitando configuraciones hardcodeadas y facilitando el despliegue en distintos entornos.**
+
+**Este ajuste prepara la aplicación para ejecución local, integración con mocks y despliegue en infraestructura containerizada sin modificar el dominio ni la lógica de negocio.**
+
+## 🔧 Cambios realizados
+
+- Se agregó un Dockerfile con build multi-stage:
+  - Compilación del proyecto usando Maven + OpenJDK 17
+  - Imagen final ligera basada en Eclipse Temurin 17
+  - Se expuso el puerto 8084 como puerto de ejecución del contenedor.
+  - Se configuró el arranque del servicio mediante java -jar.
+  - Se externalizó la URL del servicio DS en DsPredictClient usando:
+
+  - Propiedad mock.service.url
+
+  - Variable de entorno MOCK_SERVICE_URL
+
+  - Se agregó validación temprana para evitar levantar la app sin la variable requerida.
+- Se ajustó application.yml para soportar configuración por entorno sin acoplar valores locales.
+
+# 🎯 Objetivo del ajuste
+
+- Permitir despliegue consistente en entornos locales, pruebas y producción
+- Evitar valores hardcodeados de infraestructura
+- Facilitar el uso de mocks o servicios DS reales sin cambios de código
+- Preparar la app para pipelines CI/CD y despliegues en contenedores
+
+# 🍱 Beneficios
+
+- Configuración flexible por entorno
+- Menor acoplamiento a infraestructura local
+- Despliegue reproducible
+
+Base lista para integración continua
+
+# 🧱 Impacto técnico
+
+ - **Estos cambios no agregan nuevas funcionalidades ni afectan el dominio.**
+- **El impacto es exclusivamente técnico y de infraestructura, orientado a mejorar portabilidad, despliegue y mantenibilidad del proyecto.**
+
+## [📋 Volver al índice ☝️](#-índice)
 
 ---
 
@@ -259,6 +417,7 @@ Este ajuste refuerza la claridad del dominio y establece una base segura para in
   - se consideró el Json Contrato definido por el equipo de "DS"  
 
 
+### Contrato Json
 ```
 Leandro Puebla Martínez
 29/12/2025 20:44

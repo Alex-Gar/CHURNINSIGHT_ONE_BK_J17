@@ -55,7 +55,7 @@ public record DatosObtenerPrediccionCliente(
         @JsonProperty("streaming_peliculas")
         @JsonSerialize(using = BooleanToYesNoSerializer.class)
         Boolean streamingPeliculas,
-        @JsonProperty("tipo_contato")
+        @JsonProperty("tipo_contrato")
         TipoContrato tipoContrato,
         @JsonProperty("facturacion_electronica")
         @JsonSerialize(using = BooleanToYesNoSerializer.class)

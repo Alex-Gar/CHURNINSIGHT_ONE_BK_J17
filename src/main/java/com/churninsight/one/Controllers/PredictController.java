@@ -24,4 +24,10 @@ public class PredictController {
         return ResponseEntity.ok(predict);
     }
 
+    @PostMapping(value = "/save")
+    public ResponseEntity<DatosDetalleChurnCliente> predictConsultaSave(@Valid @RequestBody DatosConsultaChurnCliente datos) {
+        var predict = predictService.predecirYPersistir(datos);
+        return ResponseEntity.ok(predict);
+    }
+
 }

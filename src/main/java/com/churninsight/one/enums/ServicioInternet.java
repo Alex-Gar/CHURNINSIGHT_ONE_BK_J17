@@ -9,11 +9,16 @@ public enum ServicioInternet {
     NONE;
 
     @JsonCreator
-    public static final ServicioInternet from(String data){
-        if (data == null || data.isBlank()){
+    public static final ServicioInternet from(String data) {
+        if (data == null || data.isBlank()) {
             return null;
         }
-        return ServicioInternet.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        try {
+            return ServicioInternet.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("El servicioInternet " + data + "no es valido");
+        }
+
     }
 
 }

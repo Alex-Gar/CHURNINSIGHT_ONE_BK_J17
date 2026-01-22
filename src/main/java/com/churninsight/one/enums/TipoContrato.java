@@ -10,10 +10,15 @@ public enum TipoContrato {
 
     @JsonCreator
     public static final TipoContrato from(String data) {
-        if (data == null || data.isBlank()){
+        if (data == null || data.isBlank()) {
             return null;
         }
-        return TipoContrato.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        try {
+            return TipoContrato.valueOf(data.trim().toUpperCase().replace(" ", "_").replace("-", "_"));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("El TipoContrato " + data + " no es valido");
+        }
+
     }
 
 }
