@@ -1,14 +1,14 @@
 server:
-  port: 8081
+  port: ${app.port}
 
 spring:
   application:
     name: CHURNINSIGHT_ONE_BK_J17
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/churninsight_db
-    username: postgres
-    password: 246800
+    url: ${app.database.url}
+    username: ${app.database.username}
+    password: ${app.database.password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -28,9 +28,9 @@ spring:
 security:
   jwt:
     key:
-      private: mySecretKeyForJWTTokenGenerationThatIsVeryLongAndSecure12345
-      public: myPublicKeyForJWTTokenValidation
+      private: ${app.jwt.secret}
+      public: ${app.jwt.public}
     user:
       generator: churninsight-api
     time:
-      expiration: 86400000
+      expiration: ${app.jwt.expiration}
