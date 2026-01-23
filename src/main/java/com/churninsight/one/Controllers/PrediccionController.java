@@ -1,4 +1,4 @@
-package com.churninsight.one.controllers;
+package com.churninsight.one.Controllers;
 
 import java.util.HashMap;
 import java.util.List;
