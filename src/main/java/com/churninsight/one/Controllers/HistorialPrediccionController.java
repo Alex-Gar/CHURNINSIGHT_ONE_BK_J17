@@ -30,7 +30,7 @@ public class HistorialPrediccionController {
     @Autowired
     private HistorialPrediccionService historialPrediccionService;
 
-    @Tag(name = "Listar usuarios Activos", description = "Endpoints para listar usuarios activos")
+    @Tag(name = "Listar historiales activos", description = "Endpoints para listar historiales de predicciones activos")
     @GetMapping
     public ResponseEntity<ApiResponse> listarUsuariosActivos(@RequestParam(defaultValue = "0") Integer pagina,
             @RequestParam(defaultValue = "10") Integer tamanio) {
@@ -50,8 +50,8 @@ public class HistorialPrediccionController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Tag(name = "Buscar historial de prediccion por ID", description = "Endpoints para buscar usuario activo por ID")
-    @GetMapping("{id}")
+    @Tag(name = "Buscar historial de predicción por ID", description = "Endpoints para buscar historial de predicción activo por ID")
+    @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> buscarHistorialPorId(@PathVariable Long id) {
         ApiResponse resultado = this.historialPrediccionService.buscarHistorialActivoPorId(id);
         return new ResponseEntity<>(resultado, HttpStatus.OK);
@@ -66,15 +66,15 @@ public class HistorialPrediccionController {
     }
 
     @Tag(name = "Editar historial", description = "Endpoint para editar historial")
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> editarHistorial(@Valid @PathVariable Long id,
             @RequestBody HistorialPrediccionDto historialPrediccionDto) {
-        ApiResponse historialEditado = this.historialPrediccionService.editar(historialPrediccionDto);
+        ApiResponse historialEditado = this.historialPrediccionService.editar(id, historialPrediccionDto);
         return new ResponseEntity<>(historialEditado, HttpStatus.OK);
     }
 
     @Tag(name = "Eliminar historial", description = "Endpoint para eliminar historial")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> eliminarHistorial(@PathVariable Long id) {
         this.historialPrediccionService.borradoLogico(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

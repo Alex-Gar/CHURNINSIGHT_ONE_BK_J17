@@ -14,7 +14,7 @@ public interface HistorialPrediccionService {
 
     public ApiResponse crear(HistorialPrediccionDto historialPrediccionDto);
 
-    public ApiResponse editar(HistorialPrediccionDto historialPrediccionDto);
+    public ApiResponse editar(Long id, HistorialPrediccionDto historialPrediccionDto);
 
     public Boolean existeId(Long id);
 

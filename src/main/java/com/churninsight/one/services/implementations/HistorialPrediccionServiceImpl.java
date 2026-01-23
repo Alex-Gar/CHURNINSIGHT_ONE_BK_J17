@@ -27,7 +27,7 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
         Pageable pageable = PageRequest.of(pagina, tamanio);
         Page<HistorialPrediccion> resultado = this.historialPrediccionRepository.findAll(pageable);
         if (resultado == null || resultado.isEmpty()) {
-            throw new ResourceNotFoundException("usuarios");
+            throw new ResourceNotFoundException("historiales de predicción");
         }
         return resultado;
     }
@@ -60,26 +60,22 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
     }
 
     @Override
-    public ApiResponse editar(HistorialPrediccionDto historialPrediccionDto) {
+    public ApiResponse editar(Long id, HistorialPrediccionDto historialPrediccionDto) {
         try {
-            if (this.existeId(historialPrediccionDto.id())
-                    && historialPrediccionDto.id().equals(historialPrediccionDto.id())) {
-                HistorialPrediccion historialPrediccion = this.historialPrediccionRepository
-                        .findById(historialPrediccionDto.id()).orElse(null);
-                if (historialPrediccion != null) {
-                    historialPrediccion.setChurn(historialPrediccionDto.churn());
-                    historialPrediccion.setPrevision(historialPrediccionDto.prevision());
-                    historialPrediccion.setProbabilidad(historialPrediccionDto.probabilidad());
+            HistorialPrediccion historialPrediccion = this.historialPrediccionRepository
+                    .findById(id).orElse(null);
 
-                    HistorialPrediccion resultado = this.guardarHistorialPrediccion(historialPrediccion);
-                    ApiResponse response = new ApiResponse("Historial Predicción editado con éxito", true, resultado);
-                    return response;
-                } else {
-                    throw new ResourceNotFoundException("historial predicción", "id", historialPrediccionDto.id());
-                }
-            } else {
-                throw new ResourceNotFoundException("historial predicción", "id", historialPrediccionDto.id());
+            if (historialPrediccion == null) {
+                throw new ResourceNotFoundException("historial predicción", "id", id);
             }
+
+            historialPrediccion.setChurn(historialPrediccionDto.churn());
+            historialPrediccion.setPrevision(historialPrediccionDto.prevision());
+            historialPrediccion.setProbabilidad(historialPrediccionDto.probabilidad());
+
+            HistorialPrediccion resultado = this.guardarHistorialPrediccion(historialPrediccion);
+            ApiResponse response = new ApiResponse("Historial Predicción editado con éxito", true, resultado);
+            return response;
 
         } catch (DataAccessException ex) {
             throw new BadRequestException(ex.getMessage());
@@ -126,14 +122,10 @@ public class HistorialPrediccionServiceImpl implements HistorialPrediccionServic
     @Transactional
     @Override
     public ApiResponse borradoLogico(Long id) {
-        ApiResponse existeUsuario = this.buscarHistorialActivoPorId(id);
-        if (existeUsuario.getData() == null) {
-            throw new ResourceNotFoundException("Usuario", "id", id);
-        } else {
-            this.historialPrediccionRepository.softDeleteById(id);
-            ApiResponse response = new ApiResponse("Usuario eliminado con éxito", true);
-            return response;
-        }
+        this.buscarHistorialActivoPorId(id); // Esto ya lanza ResourceNotFoundException si no existe
+        this.historialPrediccionRepository.softDeleteById(id);
+        ApiResponse response = new ApiResponse("Historial de predicción eliminado con éxito", true);
+        return response;
     }
 
     @Override
