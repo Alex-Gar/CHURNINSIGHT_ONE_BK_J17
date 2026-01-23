@@ -1,4 +1,4 @@
-package com.churninsight.one.controllers;
+package com.churninsight.one.Controllers;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
