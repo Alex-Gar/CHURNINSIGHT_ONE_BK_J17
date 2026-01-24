@@ -4,48 +4,46 @@ import com.churninsight.one.clients.DsPredictClient;
 import com.churninsight.one.infra.helpers.ClienteValidacionesHelper;
 import com.churninsight.one.models.cliente.Cliente;
 import com.churninsight.one.models.cliente.dto.DatosActualizarCliente;
+import com.churninsight.one.models.cliente.dto.DatosDetalleChurnCliente;
 import com.churninsight.one.models.cliente.dto.DatosListarClientesChurn;
 import com.churninsight.one.models.cliente.dto.DatosObtenerPrediccionCliente;
 import com.churninsight.one.models.historico.Historico;
 import com.churninsight.one.repositories.ClienteRepository;
 import com.churninsight.one.repositories.HistoricoRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-    @Autowired
-    private ClienteValidacionesHelper clienteValidacionesHelper;
+    private final ClienteValidacionesHelper clienteValidacionesHelper;
 
-    @Autowired
-    private HistoricoRepository historicoRepository;
+    private final HistoricoRepository historicoRepository;
 
-    @Autowired
-    private DsPredictClient dsPredictClient;
+    private final DsPredictClient dsPredictClient;
 
-    public Cliente buscarClienteIdString(String idCliente) {
+    public DatosDetalleChurnCliente buscarClienteIdString(String idCliente) {
         var cliente = clienteValidacionesHelper.validaClienteExiste(idCliente);
-        return cliente;
+        return new DatosDetalleChurnCliente(cliente);
     }
 
-    public Page<DatosListarClientesChurn> listarClientesChurn(Pageable paguinas) {
-        Page page = clienteRepository.findAllByActivoTrue(paguinas).map(
+    public Page<DatosListarClientesChurn> listarClientesChurn(Pageable pageable) {
+        Page<DatosListarClientesChurn> page = clienteRepository.findAllByActivoTrue(pageable).map(
                 DatosListarClientesChurn::new
         );
         return page;
     }
 
     @Transactional
-    public Cliente actulizarYRecalcularCliente(String idCliente, DatosActualizarCliente datos) {
+    public DatosDetalleChurnCliente actualizarYRecalcularCliente(String idCliente, DatosActualizarCliente datos) {
         Cliente cliente = clienteValidacionesHelper.validaClienteExiste(idCliente);
-        cliente.actualizarCliente(datos);
+        cliente.actualizar(datos);
         try {
             var prediccion = dsPredictClient.obtenerPrediccion(new DatosObtenerPrediccionCliente(cliente));
             cliente.setChurn(prediccion.churn());
@@ -55,14 +53,14 @@ public class ClienteService {
         } catch (Exception e) {
             throw new RuntimeException("No se pudo actualizar el cliente porque el servicio de IA falló. Intente de nuevo.");
         }
-        return cliente;
+        return new DatosDetalleChurnCliente(cliente);
     }
 
     @Transactional
     public void borrarCliente(String idCliente) {
         Cliente cliente = clienteValidacionesHelper.validaClienteExiste(idCliente);
         cliente.setActivo(false);
+        clienteRepository.save(cliente);
     }
-
 }
 

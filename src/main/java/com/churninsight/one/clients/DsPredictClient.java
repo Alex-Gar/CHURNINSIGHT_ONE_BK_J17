@@ -32,7 +32,7 @@ public class DsPredictClient {
         }
 
         return restClient.post()
-                .uri("/predict")
+                .uri("/cliente")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(datos)
                 .retrieve()
