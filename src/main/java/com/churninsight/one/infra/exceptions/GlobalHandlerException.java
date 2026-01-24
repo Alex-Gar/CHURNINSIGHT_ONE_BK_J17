@@ -2,6 +2,8 @@ package com.churninsight.one.infra.exceptions;
 
 import com.churninsight.one.infra.exceptions.ex.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,7 +18,7 @@ import java.util.Map;
 public class GlobalHandlerException {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> handleJsonParseError(HttpMessageNotReadableException ex){
+    public ResponseEntity<Map<String, Object>> handleJsonParseError(HttpMessageNotReadableException ex) {
         Throwable causa = ex.getCause();
         Map<String, Object> body = new HashMap<>();
 
@@ -40,9 +42,8 @@ public class GlobalHandlerException {
     }
 
 
-
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handlerInlegaArgument(IllegalArgumentException ex){
+    public ResponseEntity<Map<String, Object>> handlerInlegaArgument(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 Map.of(
                         "error", "Valor invalido en el JSON",
@@ -52,7 +53,7 @@ public class GlobalHandlerException {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handlerMethodArgument(MethodArgumentNotValidException ex){
+    public ResponseEntity<Map<String, Object>> handlerMethodArgument(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new HashMap<>();
         ex.getBindingResult().getFieldErrors()
                 .forEach(
@@ -71,6 +72,22 @@ public class GlobalHandlerException {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(jakarta.persistence.EntityExistsException.class)
+    public ResponseEntity<Map<String, Object>> handlerEntityExists(EntityExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "error", "Conflicto de duplcidad",
+                "mensaje", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String,String>> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of(
+                "error", "Servicio de prediccion no disponible",
+                "mensaje", "No se pudo procesar la solicitud. El servicio de predicción no está disponible"
+        ));
     }
 
 }

@@ -1,6 +1,8 @@
 package com.churninsight.one.repositories;
 
 import com.churninsight.one.models.cliente.Cliente;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -11,4 +13,5 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByidClienteAndActivoTrue(String idCliente);
 
+    Page<Cliente> findAllByActivoTrue(Pageable paguinas);
 }

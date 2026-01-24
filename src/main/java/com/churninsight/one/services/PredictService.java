@@ -34,18 +34,20 @@ public class PredictService {
     }
 
     public DatosDetalleChurnCliente predecirYPersistir(@Valid DatosConsultaChurnCliente datos) {
-        Cliente cliente = clienteValidacionesHelper.validaClienteExisteOConstrulle(datos);
-        System.out.println("Churn: " + cliente.getChurn());
-        System.out.println("Prevision: " +cliente.getPrevision());
-        System.out.println("Probabilidad: " +cliente.getProbabilidad());
-        var prediccion = dsPredictClient.obtenerPrediccion(new DatosObtenerPrediccionCliente(cliente));
-        cliente.setChurn(prediccion.churn());
-        cliente.setPrevision(prediccion.prevision());
-        cliente.setProbabilidad(prediccion.probabilidad());
+        Cliente cliente = clienteValidacionesHelper.validaClienteExisteONo(datos);
         clienteRepository.save(cliente);
-        System.out.println("Churn: " + cliente.getChurn());
-        System.out.println("Prevision: " +cliente.getPrevision());
-        System.out.println("Probabilidad: " +cliente.getProbabilidad());
+        try {
+            var prediccion = dsPredictClient.obtenerPrediccion(new DatosObtenerPrediccionCliente(cliente));
+            cliente.setChurn(prediccion.churn());
+            cliente.setPrevision(prediccion.prevision());
+            cliente.setProbabilidad(prediccion.probabilidad());
+            clienteRepository.save(cliente);
+
+        } catch (Exception e) {
+            throw new RuntimeException("El cliente se creó con ID: " + cliente.getId() +
+                    ", pero la predicción falló: " + e.getMessage());
+        }
+
         return new DatosDetalleChurnCliente(cliente);
     }
 }

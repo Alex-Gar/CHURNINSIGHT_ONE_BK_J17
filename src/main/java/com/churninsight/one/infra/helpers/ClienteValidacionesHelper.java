@@ -26,11 +26,11 @@ public class ClienteValidacionesHelper {
     }
 
 
-    public Cliente validaClienteExisteOConstrulle(DatosConsultaChurnCliente datos) {
+    public Cliente validaClienteExisteONo(DatosConsultaChurnCliente datos) {
         if (datos == null) return null;
-        Optional<Cliente> clienteOpcional = clienteRepository.findByidClienteAndActivoTrue(datos.idCliente());
-        if (clienteOpcional.isPresent()) {
-            throw new EntityExistsException("El cliente existe en el sistema.");
+        Optional<Cliente> cliente = clienteRepository.findByidClienteAndActivoTrue(datos.idCliente());
+        if (cliente.isPresent()) {
+            throw new EntityExistsException("El cliente con el id: " + datos.idCliente() + " existe en el sistema.");
         }
         return new Cliente(datos);
     }

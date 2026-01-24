@@ -34,12 +34,15 @@ public class Historico {
 
     private Double probabilidad;
 
+    private Boolean activo;
+
     public Historico(Cliente cliente) {
         id = null;
         this.cliente = cliente;
         this.fechaPrediccion = LocalDateTime.now();
         this.probabilidad = cliente.getProbabilidad();
         this.churn = cliente.getChurn();
+        this.activo = true;
     }
 
 }

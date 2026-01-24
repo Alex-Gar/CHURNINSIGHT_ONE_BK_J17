@@ -4,9 +4,11 @@ import com.churninsight.one.enums.Genero;
 import com.churninsight.one.enums.MetodoPago;
 import com.churninsight.one.enums.ServicioInternet;
 import com.churninsight.one.enums.TipoContrato;
+import com.churninsight.one.models.cliente.dto.DatosActualizarCliente;
 import com.churninsight.one.models.cliente.dto.DatosConsultaChurnCliente;
 import com.churninsight.one.models.historico.Historico;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -126,4 +128,29 @@ public class Cliente {
         this.cargosTotales = datos.cargosTotales();
         this.activo = true;
     }
+
+    @Transactional
+    public void actualizarCliente(DatosActualizarCliente datos) {
+        if (datos.genero() != null) this.genero = datos.genero();
+        if (datos.adultoMayor() != null) this.adultoMayor = datos.adultoMayor();
+        if (datos.tienePareja() != null) this.tienePareja = datos.tienePareja();
+        if (datos.tieneDependientes() != null) this.tieneDependientes = datos.tieneDependientes();
+        if (datos.antiguedadMeses() != null)this.antiguedadMeses = datos.antiguedadMeses();
+        if (datos.servicioTelefono() != null) this.servicioTelefono = datos.servicioTelefono();
+        if (datos.lineasMultiples() != null)this.lineasMultiples = datos.lineasMultiples();
+        if (datos.servicioInternet() != null) this.servicioInternet = datos.servicioInternet();
+        if (datos.seguridadEnLinea() != null)this.seguridadEnLinea = datos.seguridadEnLinea();
+        if (datos.respaldoEnLinea() != null)this.respaldoEnLinea = datos.respaldoEnLinea();
+        if (datos.proteccionDispositivo() != null)this.proteccionDispositivo = datos.proteccionDispositivo();
+        if (datos.soporteTecnico() != null)this.soporteTecnico = datos.soporteTecnico();
+        if (datos.streamingTv() != null)this.streamingTv = datos.streamingTv();
+        if (datos.streamingPeliculas() != null)this.streamingPeliculas = datos.streamingPeliculas();
+        if (datos.tipoContrato() != null)this.tipoContrato = datos.tipoContrato();
+        if (datos.facturacionElectronica() != null)this.facturacionElectronica = datos.facturacionElectronica();
+        if (datos.metodoPago() != null)this.metodoPago = datos.metodoPago();
+        if (datos.cargoMensual() != null)this.cargoMensual = datos.cargoMensual();
+        if (datos.cargosTotales() != null)this.cargosTotales = datos.cargosTotales();
+    }
+
+
 }
