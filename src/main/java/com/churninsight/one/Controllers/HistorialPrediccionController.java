@@ -57,21 +57,21 @@ public class HistorialPrediccionController {
         return new ResponseEntity<>(resultado, HttpStatus.OK);
     }
 
-    @Tag(name = "Crear historial", description = "Endpoints para crear historial")
-    @PostMapping
-    public ResponseEntity<ApiResponse> crearHistorial(
-            @Valid @RequestBody HistorialPrediccionDto historialPrediccionDto) {
-        ApiResponse nuevoHistorial = this.historialPrediccionService.crear(historialPrediccionDto);
-        return new ResponseEntity<>(nuevoHistorial, HttpStatus.CREATED);
-    }
+    // @Tag(name = "Crear historial", description = "Endpoints para crear historial")
+    // @PostMapping
+    // public ResponseEntity<ApiResponse> crearHistorial(
+    //         @Valid @RequestBody HistorialPrediccionDto historialPrediccionDto) {
+    //     ApiResponse nuevoHistorial = this.historialPrediccionService.crear(historialPrediccionDto);
+    //     return new ResponseEntity<>(nuevoHistorial, HttpStatus.CREATED);
+    // }
 
-    @Tag(name = "Editar historial", description = "Endpoint para editar historial")
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> editarHistorial(@Valid @PathVariable Long id,
-            @RequestBody HistorialPrediccionDto historialPrediccionDto) {
-        ApiResponse historialEditado = this.historialPrediccionService.editar(id, historialPrediccionDto);
-        return new ResponseEntity<>(historialEditado, HttpStatus.OK);
-    }
+    // @Tag(name = "Editar historial", description = "Endpoint para editar historial")
+    // @PutMapping("/{id}")
+    // public ResponseEntity<ApiResponse> editarHistorial(@Valid @PathVariable Long id,
+    //         @RequestBody HistorialPrediccionDto historialPrediccionDto) {
+    //     ApiResponse historialEditado = this.historialPrediccionService.editar(id, historialPrediccionDto);
+    //     return new ResponseEntity<>(historialEditado, HttpStatus.OK);
+    // }
 
     @Tag(name = "Eliminar historial", description = "Endpoint para eliminar historial")
     @DeleteMapping("/{id}")

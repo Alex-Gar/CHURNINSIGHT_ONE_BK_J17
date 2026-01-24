@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import static com.churninsight.one.mappers.InputModelViewMapper.toDto;
+import com.churninsight.one.models.dto.prediccion.PrediccionDatosPersonalizadosDTO;
 import com.churninsight.one.models.dto.prediccion.PrediccionDSResponse;
 import com.churninsight.one.models.entities.historialPredicciones.HistorialPrediccion;
 import com.churninsight.one.models.entities.prediccion.Prediccion;
@@ -103,8 +104,73 @@ public class PrediccionServiceImpl implements PrediccionService {
         return prediccionRepository.totalEvaluados();
     }
 
-    @Override
+@Override
     public Long obtenerTotalChurn() {
         return prediccionRepository.totalChurn();
+    }
+
+    @Override
+    @Transactional
+    public Prediccion evaluarPrediccionConDatos(PrediccionDatosPersonalizadosDTO datosPersonalizados) {
+        
+        // Transformar DTO al formato que espera el servicio de Data Science
+        outputModelViewDto usuarioDto = new outputModelViewDto(
+                datosPersonalizados.getIdCliente(),
+                datosPersonalizados.getGenero(),
+                datosPersonalizados.getAdultoMayor(),
+                datosPersonalizados.getTienePareja(),
+                datosPersonalizados.getTieneDependientes(),
+                datosPersonalizados.getAntiguedadMeses() != null ? 
+                    java.math.BigDecimal.valueOf(datosPersonalizados.getAntiguedadMeses()) : null,
+                datosPersonalizados.getServicioTelefono(),
+                datosPersonalizados.getLineasMultiples(),
+                datosPersonalizados.getServicioInternet(),
+                datosPersonalizados.getSeguridadEnLinea(),
+                datosPersonalizados.getRespaldoEnLinea(),
+                datosPersonalizados.getProteccionDispositivo(),
+                datosPersonalizados.getSoporteTecnico(),
+                datosPersonalizados.getStreamingTv(),
+                datosPersonalizados.getStreamingPeliculas(),
+                datosPersonalizados.getTipoContrato(),
+                datosPersonalizados.getFacturacionElectronica(),
+                datosPersonalizados.getMetodoPago(),
+                datosPersonalizados.getCargoMensual(),
+                datosPersonalizados.getCargosTotales()
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> entity = new HttpEntity<>(usuarioDto, headers);
+
+        PrediccionDSResponse response = restTemplate.postForObject(dataScienceUrl, entity, PrediccionDSResponse.class);
+
+        if (response == null) {
+            throw new RuntimeException("Respuesta nula del servicio de predicción con datos personalizados");
+        }
+
+        // Buscar o crear predicción para el usuario
+        Prediccion prediccion = buscarUsuarioPorId(datosPersonalizados.getIdCliente())
+                .orElseGet(() -> {
+                    Prediccion p = new Prediccion();
+                    p.setIdUsuario(datosPersonalizados.getIdCliente());
+                    return p;
+                });
+
+        // Guardar historial ANTES de actualizar la predicción
+        if (prediccion.getId() != null) {
+            HistorialPrediccion historial = new HistorialPrediccion();
+            historial.setChurn(prediccion.getChurn());
+            historial.setPrevision(prediccion.getPrevision());
+            historial.setProbabilidad(prediccion.getProbabilidad());
+
+            prediccion.getHistoriales().add(historial);
+        }
+
+        // Actualizar con nueva predicción
+        prediccion.setChurn(response.churn());
+        prediccion.setPrevision(response.prevision());
+        prediccion.setProbabilidad(response.probabilidad());
+
+        return prediccionRepository.save(prediccion);
     }
 }
