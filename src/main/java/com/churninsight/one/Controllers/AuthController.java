@@ -3,10 +3,7 @@ package com.churninsight.one.Controllers;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.churninsight.one.exceptions.BadRequestException;
 import com.churninsight.one.models.dto.request.AuthResponse;
@@ -18,6 +15,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 @Tag(name = "Autenticación", description = "Endpoints de autenticación y registro")
 public class AuthController {
 
@@ -50,3 +48,22 @@ public class AuthController {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
