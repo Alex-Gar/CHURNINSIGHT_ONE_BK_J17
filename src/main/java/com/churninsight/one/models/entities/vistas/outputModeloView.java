@@ -30,7 +30,7 @@ public class outputModeloView {
     private Boolean tieneDependientes;
 
     @Column(name = "antiguedad_meses")
-    private BigDecimal antiguedadmeses;
+    private BigDecimal antiguedadMeses;
 
     @Column(name = "servicio_telefono")
     private Boolean servicioTelefono;
@@ -114,12 +114,12 @@ public class outputModeloView {
         this.tieneDependientes = tieneDependientes;
     }
 
-    public BigDecimal getAntiguedadmeses() {
-        return antiguedadmeses;
+    public BigDecimal getAntiguedadMeses() {
+        return antiguedadMeses;
     }
 
-    public void setAntiguedadmeses(BigDecimal antiguedadmeses) {
-        this.antiguedadmeses = antiguedadmeses;
+    public void setAntiguedadMeses(BigDecimal antiguedadMeses) {
+        this.antiguedadMeses = antiguedadMeses;
     }
 
     public Boolean getServicioTelefono() {
@@ -233,5 +233,6 @@ public class outputModeloView {
     public void setLineasMultiples(Boolean lineasMultiples) {
         this.lineasMultiples = lineasMultiples;
     }
+
 
 }
