@@ -17,7 +17,7 @@ public class InputModelViewMapper {
                 u.getAdultoMayor(),
                 siNo(u.getTienePareja()),
                 siNo(u.getTieneDependientes()),
-                u.getAntiguedadmeses(),
+                u.getAntiguedadMeses(),
                 siNo(u.getServicioTelefono()),
                 siNo(u.getLineasMultiples()),
                 u.getServicioInternet(),

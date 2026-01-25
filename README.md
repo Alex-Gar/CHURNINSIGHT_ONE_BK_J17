@@ -139,7 +139,7 @@ src/
 | | ├── config
 | | ├── exceptions
 │ │ ├── service/
-| | |         └──imprementations
+| | |         └──implementations
 | | ├── security
 │ │ ├── models/
 | | |         ├──entities
