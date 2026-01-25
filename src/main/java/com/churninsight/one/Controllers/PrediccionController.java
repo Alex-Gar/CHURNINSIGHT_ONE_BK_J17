@@ -7,12 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.churninsight.one.models.dto.prediccion.PrediccionDatosPersonalizadosDTO;
 import com.churninsight.one.models.dto.prediccion.PrediccionResponse;
 import com.churninsight.one.models.entities.prediccion.Prediccion;
 import com.churninsight.one.models.peyload.ApiResponse;
@@ -25,10 +22,17 @@ public class PrediccionController {
         @Autowired
         private PrediccionService prediccionService;
 
-        @PostMapping("/evaluar/{idUsuario}")
+@PostMapping("/evaluar/{idUsuario}")
         public ResponseEntity<ApiResponse> evaluar(@PathVariable String idUsuario) {
                 Prediccion prediccion = prediccionService.evaluarPrediccion(idUsuario);
                 ApiResponse response = new ApiResponse(prediccion, "Predicción evaluada con éxito", true);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @PostMapping("/evaluar-con-datos")
+        public ResponseEntity<ApiResponse> evaluarConDatos(@RequestBody PrediccionDatosPersonalizadosDTO datosPersonalizados) {
+                Prediccion prediccion = prediccionService.evaluarPrediccionConDatos(datosPersonalizados);
+                ApiResponse response = new ApiResponse(prediccion, "Predicción evaluada con datos personalizados", true);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 

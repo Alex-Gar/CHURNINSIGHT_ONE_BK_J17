@@ -33,29 +33,39 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml",
-                        "/webjars/**")
-                .permitAll()
-                // GET: Solo usuarios con rol USUARIO o ADMIN
-                .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("USUARIO", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyRole("USUARIO", "ADMIN")
-                // Usuarios: POST, PUT, DELETE solo para ADMIN
-                .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
-                // Roles: POST, PUT, DELETE solo para ADMIN
-                .requestMatchers(HttpMethod.POST, "/api/roles/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasRole("ADMIN")
-                // Gestión de servicios
-                .requestMatchers(HttpMethod.GET, "/api/servicios/**").hasAnyRole("USUARIO", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/servicios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/servicios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/servicios/**").hasRole("ADMIN")
-                // Gestión de permisos: Solo ADMIN
-                .requestMatchers("/permisos/**").hasRole("ADMIN")
-                .anyRequest().authenticated())
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml",
+                                "/webjars/**")
+                        .permitAll()
+                        // GET: Solo usuarios con rol USUARIO o ADMIN
+                        .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyRole("USUARIO", "ADMIN")
+                        // Usuarios: POST, PUT, DELETE solo para ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
+                        // Roles: POST, PUT, DELETE solo para ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasRole("ADMIN")
+                        // Gestión de servicios
+                        .requestMatchers(HttpMethod.GET, "/api/servicios/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/servicios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/servicios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/servicios/**").hasRole("ADMIN")
+                        // Gestión de planes
+                        .requestMatchers(HttpMethod.GET, "/api/planes/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/planes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/planes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/planes/**").hasRole("ADMIN")
+                        // Gestión de ofertas
+                        .requestMatchers(HttpMethod.GET, "/api/ofertas/**").hasAnyRole("USUARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/ofertas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/ofertas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/ofertas/**").hasRole("ADMIN")
+                        // Gestión de permisos: Solo ADMIN
+                        .requestMatchers("/permisos/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(this.JwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
@@ -66,7 +76,7 @@ public class SecurityConfigurations {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-       @Bean
+    @Bean
     public AuthenticationProvider AuthenticationProvider(UsuarioServiceImpl usuarioServiceImpl) {
         // provider que manejara el logeo
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
