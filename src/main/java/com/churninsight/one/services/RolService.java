@@ -48,6 +48,15 @@ public class RolService {
         return rolRepository.findById(id).map(rol -> {
             rol.setNombre(rolDetalles.getNombre());
             rol.setDescripcion(rolDetalles.getDescripcion());
+
+            // Limpiar y actualizar permisos
+            rol.getPermisos().clear();
+            if (rolDetalles.getPermisos() != null) {
+                rolDetalles.getPermisos().forEach(p -> {
+                    permisoRepository.findById(p.getId()).ifPresent(rol::addPermiso);
+                });
+            }
+
             return rolRepository.save(rol);
         }).orElseThrow(() -> new RuntimeException("Rol no encontrado con id: " + id));
     }
